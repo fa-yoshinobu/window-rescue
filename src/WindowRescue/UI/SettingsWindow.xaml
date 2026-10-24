@@ -1,0 +1,163 @@
+<Window x:Class="WindowRescue.UI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:WindowRescue.Localization"
+        xmlns:ui="clr-namespace:WindowRescue.UI"
+        Style="{StaticResource AppWindow}"
+        Title="{l:T Settings_WindowTitle}"
+        Width="880" Height="820" MinWidth="420" MinHeight="360"
+        Icon="pack://application:,,,/Assets/WindowRescue.ico">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False"
+                  Background="{DynamicResource Brush.Surface}">
+        <StackPanel Margin="32,24,32,32" MaxWidth="900">
+            <TextBlock Style="{StaticResource H1}" Text="{l:T Settings_Heading}" />
+
+            <!-- よく使う救出操作（上部） -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_QuickActions}" />
+                    <WrapPanel>
+                        <Button Style="{StaticResource PrimaryButton}" Margin="0,0,12,8" Click="RescueAll_Click">
+                            <TextBlock Text="{l:T Panel_RescueAll}" />
+                        </Button>
+                        <Button Margin="0,0,12,8" Click="OpenList_Click"><TextBlock Text="{l:T Menu_OpenList}" /></Button>
+                        <Button Margin="0,0,12,8" Click="OpenPanel_Click"><TextBlock Text="{l:T Menu_OpenPanel}" /></Button>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 自動救出 -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Monitoring}" />
+                    <StackPanel x:Name="ModeGroup" AutomationProperties.Name="{l:T Settings_Monitoring}">
+                        <RadioButton x:Name="ModeOff" GroupName="Mode" Checked="Mode_Checked">
+                            <StackPanel>
+                                <TextBlock Text="{l:T Mode_Off}" FontWeight="Bold" />
+                                <TextBlock Style="{StaticResource Help}" Text="{l:T Mode_OffHelp}" />
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton x:Name="ModeAuto" GroupName="Mode" Checked="Mode_Checked">
+                            <StackPanel>
+                                <TextBlock Text="{l:T Mode_Auto}" FontWeight="Bold" />
+                                <TextBlock Style="{StaticResource Help}" Text="{l:T Mode_AutoHelp}" />
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton x:Name="ModeFixed" GroupName="Mode" Checked="Mode_Checked">
+                            <StackPanel>
+                                <TextBlock Text="{l:T Mode_Fixed}" FontWeight="Bold" />
+                                <TextBlock Style="{StaticResource Help}" Text="{l:T Mode_FixedHelp}" />
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <CheckBox x:Name="AutoResizeCheck" Margin="0,16,0,0" Checked="AutoResize_Changed" Unchecked="AutoResize_Changed">
+                        <TextBlock x:Name="AutoResizeText" TextWrapping="Wrap" />
+                    </CheckBox>
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_AutoResizeHelp}" />
+
+                    <WrapPanel Margin="0,8,0,0">
+                        <StackPanel Margin="0,0,16,0" Width="240">
+                            <TextBlock Style="{StaticResource Label}" Text="{l:T Settings_TinyWidth}" x:Name="TinyWLabel" />
+                            <TextBox x:Name="TinyW" LostFocus="Numbers_LostFocus" AutomationProperties.LabeledBy="{Binding ElementName=TinyWLabel}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,16,0" Width="240">
+                            <TextBlock Style="{StaticResource Label}" Text="{l:T Settings_TinyHeight}" x:Name="TinyHLabel" />
+                            <TextBox x:Name="TinyH" LostFocus="Numbers_LostFocus" AutomationProperties.LabeledBy="{Binding ElementName=TinyHLabel}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,16,0" Width="240">
+                            <TextBlock Style="{StaticResource Label}" Text="{l:T Settings_StdWidth}" x:Name="StdWLabel" />
+                            <TextBox x:Name="StdW" LostFocus="Numbers_LostFocus" AutomationProperties.LabeledBy="{Binding ElementName=StdWLabel}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,16,0" Width="240">
+                            <TextBlock Style="{StaticResource Label}" Text="{l:T Settings_StdHeight}" x:Name="StdHLabel" />
+                            <TextBox x:Name="StdH" LostFocus="Numbers_LostFocus" AutomationProperties.LabeledBy="{Binding ElementName=StdHLabel}" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_DipHelp}" />
+                    <ui:StatusBanner x:Name="NumbersBanner" />
+
+                    <TextBlock Style="{StaticResource Label}" Margin="0,24,0,4" Text="{l:T Settings_Exclusions}" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_ExclusionsHelp}" />
+                    <StackPanel x:Name="ExclusionRows" Margin="0,8,0,0" />
+                    <WrapPanel Margin="0,8,0,0">
+                        <StackPanel Margin="0,0,12,8" Width="220">
+                            <TextBlock Style="{StaticResource Label}" Margin="0,0,0,4" Text="{l:T Settings_ProcessName}" x:Name="ProcLabel" />
+                            <TextBox x:Name="ExclusionProcess" AutomationProperties.LabeledBy="{Binding ElementName=ProcLabel}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Width="240">
+                            <TextBlock Style="{StaticResource Label}" Margin="0,0,0,4" Text="{l:T Settings_ExclusionScope}" x:Name="ScopeLabel" />
+                            <ComboBox x:Name="ExclusionScope" AutomationProperties.LabeledBy="{Binding ElementName=ScopeLabel}" />
+                        </StackPanel>
+                        <Button VerticalAlignment="Bottom" Margin="0,0,0,8" Click="AddExclusion_Click"><TextBlock Text="{l:T Settings_AddExclusion}" /></Button>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ショートカット -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Shortcuts}" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_ShortcutsHelp}" />
+                    <Grid x:Name="ShortcutGrid" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" MinWidth="160" />
+                            <ColumnDefinition Width="2*" MinWidth="160" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                    <Button Margin="0,12,0,0" Click="ResetShortcuts_Click"><TextBlock Text="{l:T Settings_ResetShortcuts}" /></Button>
+                </StackPanel>
+            </Border>
+
+            <!-- 右クリックメニュー -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_ContextMenu}" />
+                    <ui:StatusBanner x:Name="ContextMenuBanner" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_ContextMenuHelp}" />
+                    <WrapPanel Margin="0,8,0,0">
+                        <Button x:Name="RegisterButton" Style="{StaticResource PrimaryButton}" Margin="0,0,12,8" Click="Register_Click">
+                            <TextBlock x:Name="RegisterButtonText" />
+                        </Button>
+                        <Button x:Name="UnregisterButton" Margin="0,0,12,8" Click="Unregister_Click">
+                            <TextBlock Text="{l:T Settings_Unregister}" />
+                        </Button>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 言語 / Language（言語名は常に両言語で表記する） -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="言語 / Language" x:Name="LanguageLabel" />
+                    <ComboBox x:Name="LanguageCombo" Width="320" HorizontalAlignment="Left" SelectionChanged="Language_Changed"
+                              AutomationProperties.Name="言語 / Language" />
+                </StackPanel>
+            </Border>
+
+            <!-- 起動 -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Startup}" />
+                    <CheckBox x:Name="AutoStartCheck" Checked="AutoStart_Changed" Unchecked="AutoStart_Changed">
+                        <TextBlock Text="{l:T Settings_AutoStart}" TextWrapping="Wrap" />
+                    </CheckBox>
+                    <TextBlock Style="{StaticResource Label}" Text="{l:T Settings_Privilege}" />
+                    <TextBlock x:Name="PrivilegeText" Style="{StaticResource Help}" />
+                    <Button x:Name="ElevateButton" Margin="0,8,0,0" Click="Elevate_Click"><TextBlock Text="{l:T Menu_RestartElevated}" /></Button>
+                    <TextBlock Style="{StaticResource Help}" Margin="0,16,0,0" x:Name="SettingsPathText" />
+                </StackPanel>
+            </Border>
+
+            <!-- バージョン情報 -->
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T About_Title}" />
+                    <TextBlock x:Name="VersionText" />
+                    <Button Margin="0,8,0,0" Click="About_Click"><TextBlock Text="{l:T Settings_ShowAbout}" /></Button>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

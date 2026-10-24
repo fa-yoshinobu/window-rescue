@@ -1,0 +1,37 @@
+<Window x:Class="WindowRescue.UI.RescuePanelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:WindowRescue.Localization"
+        xmlns:ui="clr-namespace:WindowRescue.UI"
+        Style="{StaticResource AppWindow}"
+        Title="{l:T Panel_WindowTitle}"
+        Width="560" Height="560" MinWidth="360" MinHeight="300"
+        Icon="pack://application:,,,/Assets/WindowRescue.ico">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False">
+        <StackPanel Margin="32,24,32,24">
+            <TextBlock Style="{StaticResource H1}" Text="{l:T Panel_Heading}" />
+            <TextBlock Style="{StaticResource Help}" Text="{l:T Panel_Description}" />
+
+            <TextBlock Style="{StaticResource Label}" Text="{l:T Common_Destination}" x:Name="DestinationLabel" />
+            <ComboBox x:Name="DestinationCombo" DisplayMemberPath="Label" SelectionChanged="DestinationCombo_SelectionChanged"
+                      AutomationProperties.LabeledBy="{Binding ElementName=DestinationLabel}" />
+
+            <WrapPanel Margin="0,16,0,0" Orientation="Horizontal">
+                <Button x:Name="RescueAllButton" Style="{StaticResource PrimaryButton}" Margin="0,0,12,12" Click="RescueAll_Click">
+                    <TextBlock Text="{l:T Panel_RescueAll}" />
+                </Button>
+                <Button Margin="0,0,12,12" Click="RescueHere_Click">
+                    <TextBlock Text="{l:T Menu_RescueHere}" />
+                </Button>
+            </WrapPanel>
+            <TextBlock Style="{StaticResource Help}" x:Name="ThisDisplayText" />
+
+            <ui:StatusBanner x:Name="ResultBanner" />
+
+            <WrapPanel Margin="0,16,0,0">
+                <Button Margin="0,0,12,12" Click="OpenList_Click"><TextBlock Text="{l:T Menu_OpenList}" /></Button>
+                <Button Margin="0,0,12,12" Click="OpenSettings_Click"><TextBlock Text="{l:T Menu_OpenSettings}" /></Button>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

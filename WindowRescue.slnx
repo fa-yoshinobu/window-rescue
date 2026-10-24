@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WindowRescue/WindowRescue.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WindowRescue.Tests/WindowRescue.Tests.csproj" />
+  </Folder>
+</Solution>

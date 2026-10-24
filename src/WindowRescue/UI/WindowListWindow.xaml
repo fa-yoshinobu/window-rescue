@@ -1,0 +1,72 @@
+<Window x:Class="WindowRescue.UI.WindowListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l="clr-namespace:WindowRescue.Localization"
+        xmlns:ui="clr-namespace:WindowRescue.UI"
+        Style="{StaticResource AppWindow}"
+        Title="{l:T List_WindowTitle}"
+        Width="1100" Height="720" MinWidth="480" MinHeight="360"
+        Icon="pack://application:,,,/Assets/WindowRescue.ico">
+    <Grid Margin="24,16,24,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 救出操作（上部） -->
+        <WrapPanel Grid.Row="0" VerticalAlignment="Bottom">
+            <StackPanel Margin="0,0,16,8" MinWidth="280">
+                <TextBlock Style="{StaticResource Label}" Margin="0,0,0,4" Text="{l:T Common_Destination}" x:Name="DestinationLabel" />
+                <ComboBox x:Name="DestinationCombo" DisplayMemberPath="Label" AutomationProperties.LabeledBy="{Binding ElementName=DestinationLabel}" />
+            </StackPanel>
+            <Button x:Name="RescueButton" Style="{StaticResource PrimaryButton}" Margin="0,0,12,8" VerticalAlignment="Bottom" Click="Rescue_Click">
+                <TextBlock Text="{l:T List_RescueSelected}" />
+            </Button>
+            <Button Margin="0,0,12,8" VerticalAlignment="Bottom" Click="Refresh_Click">
+                <TextBlock Text="{l:T List_Refresh}" />
+            </Button>
+        </WrapPanel>
+
+        <!-- 検索・絞り込み -->
+        <WrapPanel Grid.Row="1" Margin="0,8,0,8">
+            <StackPanel Margin="0,0,16,0" MinWidth="320">
+                <TextBlock Style="{StaticResource Label}" Margin="0,0,0,4" Text="{l:T List_Search}" x:Name="SearchLabel" />
+                <TextBox x:Name="SearchBox" TextChanged="Filter_Changed" AutomationProperties.LabeledBy="{Binding ElementName=SearchLabel}" />
+            </StackPanel>
+            <CheckBox x:Name="ProblemsOnly" VerticalAlignment="Bottom" Margin="0,0,16,10" Checked="Filter_Changed" Unchecked="Filter_Changed">
+                <TextBlock Text="{l:T List_ProblemsOnly}" />
+            </CheckBox>
+            <TextBlock x:Name="CountText" VerticalAlignment="Bottom" Margin="0,0,0,12" Foreground="{DynamicResource Brush.TextSub}" />
+        </WrapPanel>
+
+        <DataGrid Grid.Row="2" x:Name="Grid" SelectionChanged="Grid_SelectionChanged" PreviewKeyDown="Grid_PreviewKeyDown"
+                  MouseDoubleClick="Grid_MouseDoubleClick" AutomationProperties.Name="{l:T List_TableName}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding AppName}" Width="180" Header="{Binding [List_ColApp], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTextColumn Binding="{Binding ProcessName}" Width="120" Header="{Binding [List_ColProcess], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTextColumn Binding="{Binding Title}" Width="2*" Header="{Binding [List_ColTitle], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTextColumn Binding="{Binding Location}" Width="150" Header="{Binding [List_ColLocation], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTextColumn Binding="{Binding Position}" Width="120" Header="{Binding [List_ColPosition], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTextColumn Binding="{Binding Size}" Width="120" Header="{Binding [List_ColSize], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTextColumn Binding="{Binding State}" Width="90" Header="{Binding [List_ColState], Source={x:Static l:Loc.Instance}}" />
+                <DataGridTemplateColumn Width="*" Header="{Binding [List_ColIssues], Source={x:Static l:Loc.Instance}}" SortMemberPath="Issues">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE7BA;" FontFamily="{DynamicResource Font.Icon}" Foreground="{DynamicResource Brush.Warning}" Margin="0,0,6,0"
+                                           VerticalAlignment="Center" Visibility="{Binding IssueIconVisibility}" />
+                                <TextBlock Text="{Binding Issues}" VerticalAlignment="Center" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Grid.Row="2" x:Name="EmptyText" Text="{l:T List_Empty}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Foreground="{DynamicResource Brush.TextSub}" Visibility="Collapsed" Margin="0,40,0,0" />
+
+        <ui:StatusBanner Grid.Row="3" x:Name="Banner" />
+    </Grid>
+</Window>

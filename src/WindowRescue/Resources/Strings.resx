@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App_Name" xml:space="preserve"><value>Window Rescue</value></data>
+  <data name="Menu_Title" xml:space="preserve"><value>Window Rescue</value></data>
+  <data name="Menu_RescueHere" xml:space="preserve"><value>Rescue All Windows to This Display</value></data>
+  <data name="Menu_OpenList" xml:space="preserve"><value>Window List</value></data>
+  <data name="Menu_OpenSettings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Menu_ShowMini" xml:space="preserve"><value>Show Mini Window</value></data>
+  <data name="Mini_ThisDisplay" xml:space="preserve"><value>This display: display {0}</value></data>
+  <data name="Mini_PinNew" xml:space="preserve"><value>Show new windows on this display</value></data>
+  <data name="Mini_FixTiny" xml:space="preserve"><value>Fix very small windows</value></data>
+  <data name="Mini_Gather" xml:space="preserve"><value>Gather Windows to This Display</value></data>
+  <data name="Tiny_Fixed" xml:space="preserve"><value>Fixed very small windows</value></data>
+  <data name="Tiny_None" xml:space="preserve"><value>There are no very small windows to fix.</value></data>
+  <data name="Menu_OpenPanel" xml:space="preserve"><value>Rescue Panel</value></data>
+  <data name="Menu_PinNewWindows" xml:space="preserve"><value>Show New Windows on This Display (Display {0})</value></data>
+  <data name="Pin_On" xml:space="preserve"><value>New windows will open on display {0}</value></data>
+  <data name="Pin_Off" xml:space="preserve"><value>New windows are no longer moved to a fixed display</value></data>
+  <data name="Action_RescueHere" xml:space="preserve"><value>Rescue all windows to the display under the pointer</value></data>
+  <data name="Menu_RestartElevated" xml:space="preserve"><value>Restart as Administrator</value></data>
+  <data name="Menu_About" xml:space="preserve"><value>About</value></data>
+  <data name="About_Title" xml:space="preserve"><value>About Window Rescue</value></data>
+  <data name="About_Version" xml:space="preserve"><value>Version: </value></data>
+  <data name="About_Company" xml:space="preserve"><value>Developer: </value></data>
+  <data name="About_Libraries" xml:space="preserve"><value>Libraries</value></data>
+  <data name="About_License" xml:space="preserve"><value>App license</value></data>
+  <data name="About_ColName" xml:space="preserve"><value>Name</value></data>
+  <data name="About_ColVersion" xml:space="preserve"><value>Version</value></data>
+  <data name="About_ColLicense" xml:space="preserve"><value>License</value></data>
+  <data name="About_ColPurpose" xml:space="preserve"><value>Used for</value></data>
+  <data name="About_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="About_PurposeApp" xml:space="preserve"><value>The app itself</value></data>
+  <data name="About_DadsTokens" xml:space="preserve"><value>DADS design tokens</value></data>
+  <data name="About_PurposeDads" xml:space="preserve"><value>Screen colors (© Digital Agency, Japan)</value></data>
+  <data name="About_PurposeRuntime" xml:space="preserve"><value>Runtime</value></data>
+  <data name="About_NoLicense" xml:space="preserve"><value>No license text is included.</value></data>
+  <data name="About_LinkError" xml:space="preserve"><value>Could not open the browser.</value></data>
+  <data name="Settings_ShowAbout" xml:space="preserve"><value>Show Version Information</value></data>
+  <data name="Menu_Exit" xml:space="preserve"><value>Exit</value></data>
+  <data name="Common_Destination" xml:space="preserve"><value>Destination Display</value></data>
+  <data name="Common_On" xml:space="preserve"><value>On</value></data>
+  <data name="Common_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="Common_Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Panel_WindowTitle" xml:space="preserve"><value>Rescue Panel - Window Rescue</value></data>
+  <data name="Panel_Heading" xml:space="preserve"><value>Rescue Panel</value></data>
+  <data name="Panel_Description" xml:space="preserve"><value>Bring windows that are off-screen, on a display you cannot see, or too small to use back to the destination display.</value></data>
+  <data name="Panel_RescueAll" xml:space="preserve"><value>Rescue All Windows to Destination</value></data>
+  <data name="Panel_ThisDisplayIs" xml:space="preserve"><value>"This display" is display {0}, where this panel was opened.</value></data>
+  <data name="Panel_LastResult" xml:space="preserve"><value>Last result</value></data>
+  <data name="Display_Label" xml:space="preserve"><value>Display {0}: {1} ({2} × {3}, {4}%, Windows DISPLAY{5})</value></data>
+  <data name="List_WindowTitle" xml:space="preserve"><value>Window List - Window Rescue</value></data>
+  <data name="List_RescueSelected" xml:space="preserve"><value>Rescue Selected Windows</value></data>
+  <data name="List_Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="List_Search" xml:space="preserve"><value>Search by app, process, or title</value></data>
+  <data name="List_ProblemsOnly" xml:space="preserve"><value>Show only windows with problems</value></data>
+  <data name="List_TableName" xml:space="preserve"><value>Target windows</value></data>
+  <data name="List_ColApp" xml:space="preserve"><value>App</value></data>
+  <data name="List_ColProcess" xml:space="preserve"><value>Process</value></data>
+  <data name="List_ColTitle" xml:space="preserve"><value>Window title</value></data>
+  <data name="List_ColLocation" xml:space="preserve"><value>Location</value></data>
+  <data name="List_ColPosition" xml:space="preserve"><value>Position</value></data>
+  <data name="List_ColSize" xml:space="preserve"><value>Size</value></data>
+  <data name="List_ColState" xml:space="preserve"><value>State</value></data>
+  <data name="List_ColIssues" xml:space="preserve"><value>Issues</value></data>
+  <data name="List_Empty" xml:space="preserve"><value>No windows match.</value></data>
+  <data name="List_NoTitle" xml:space="preserve"><value>(No title)</value></data>
+  <data name="List_IssueSeparator" xml:space="preserve"><value>, </value></data>
+  <data name="List_Count_One" xml:space="preserve"><value>{0} window shown ({1} with problems in total)</value></data>
+  <data name="List_Count_Other" xml:space="preserve"><value>{0} windows shown ({1} with problems in total)</value></data>
+  <data name="List_NoDestination" xml:space="preserve"><value>Choose a destination display.</value></data>
+  <data name="List_SelectFirst" xml:space="preserve"><value>Select the windows to rescue.</value></data>
+  <data name="State_Normal" xml:space="preserve"><value>Normal</value></data>
+  <data name="State_Minimized" xml:space="preserve"><value>Minimized</value></data>
+  <data name="State_Maximized" xml:space="preserve"><value>Maximized</value></data>
+  <data name="Location_Offscreen" xml:space="preserve"><value>Off-screen</value></data>
+  <data name="Location_Display" xml:space="preserve"><value>Display {0}</value></data>
+  <data name="Issue_NotResponding" xml:space="preserve"><value>Not responding</value></data>
+  <data name="Issue_Tiny" xml:space="preserve"><value>Very small</value></data>
+  <data name="Issue_PartiallyOffscreen" xml:space="preserve"><value>Partly off-screen</value></data>
+  <data name="Issue_NotOperable" xml:space="preserve"><value>Cannot be operated</value></data>
+  <data name="Status_Success" xml:space="preserve"><value>Success</value></data>
+  <data name="Status_Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="Status_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Status_Info" xml:space="preserve"><value>Information</value></data>
+  <data name="Result_RescuedTo" xml:space="preserve"><value>Rescued windows to display {0}</value></data>
+  <data name="Result_Summary" xml:space="preserve"><value>Moved: {0} · Skipped: {1} · Failed: {2}</value></data>
+  <data name="Reason_Excluded" xml:space="preserve"><value>Excluded in settings</value></data>
+  <data name="Reason_NotResponding" xml:space="preserve"><value>The app is not responding</value></data>
+  <data name="Reason_Unexpected" xml:space="preserve"><value>An unexpected error occurred</value></data>
+  <data name="Reason_Closed" xml:space="preserve"><value>The window has been closed</value></data>
+  <data name="Reason_MoveRefused" xml:space="preserve"><value>The app refused to move or resize</value></data>
+  <data name="Reason_AccessDenied" xml:space="preserve"><value>Cannot move a window of an app running as administrator. Restart Window Rescue as administrator to move it.</value></data>
+  <data name="Reason_DoesNotFit" xml:space="preserve"><value>Did not fit completely; the title bar was placed in view</value></data>
+  <data name="Error_SaveSettings" xml:space="preserve"><value>Could not save settings</value></data>
+  <data name="Error_Unexpected" xml:space="preserve"><value>An unexpected error occurred</value></data>
+  <data name="Error_DisplayNotConnected" xml:space="preserve"><value>Display {0} is not connected. No windows were moved.</value></data>
+  <data name="Error_NoActiveWindow" xml:space="preserve"><value>There is no selected window to move.</value></data>
+  <data name="Error_ContextMenuLabels" xml:space="preserve"><value>The display language was changed, but the desktop menu text could not be updated. Use "Fix Registration" in Settings.</value></data>
+  <data name="Error_AutoStart" xml:space="preserve"><value>Could not change the startup setting</value></data>
+  <data name="Error_InvalidNumber" xml:space="preserve"><value>Some values are not valid</value></data>
+  <data name="Error_InvalidNumberHint" xml:space="preserve"><value>Thresholds: 20–2000. Standard width: 200–8000. Standard height: 150–8000 (DIP). Values were not saved.</value></data>
+  <data name="Settings_WindowTitle" xml:space="preserve"><value>Settings - Window Rescue</value></data>
+  <data name="Settings_Heading" xml:space="preserve"><value>Settings</value></data>
+  <data name="Settings_QuickActions" xml:space="preserve"><value>Rescue</value></data>
+  <data name="Settings_Monitoring" xml:space="preserve"><value>Automatic rescue of new windows</value></data>
+  <data name="Mode_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="Mode_OffHelp" xml:space="preserve"><value>New windows are not corrected. Manual rescue is still available.</value></data>
+  <data name="Mode_Auto" xml:space="preserve"><value>Automatic rescue</value></data>
+  <data name="Mode_AutoHelp" xml:space="preserve"><value>Only windows that open off-screen, partly outside, or too small are corrected. Normal windows are not moved.</value></data>
+  <data name="Mode_Fixed" xml:space="preserve"><value>Always open on the destination display</value></data>
+  <data name="Mode_FixedHelp" xml:space="preserve"><value>New windows are moved to the destination display. You can also turn this on from the tray menu: "Show New Windows on This Display".</value></data>
+  <data name="Settings_AutoResize" xml:space="preserve"><value>Automatic size correction: {0}</value></data>
+  <data name="Settings_AutoResizeHelp" xml:space="preserve"><value>Enlarges resizable windows that are very small. Fixed-size windows and dialogs are never enlarged.</value></data>
+  <data name="Settings_TinyWidth" xml:space="preserve"><value>Very small: width under</value></data>
+  <data name="Settings_TinyHeight" xml:space="preserve"><value>Very small: height under</value></data>
+  <data name="Settings_StdWidth" xml:space="preserve"><value>Standard rescue width</value></data>
+  <data name="Settings_StdHeight" xml:space="preserve"><value>Standard rescue height</value></data>
+  <data name="Settings_DipHelp" xml:space="preserve"><value>Values are in DIP (1 DIP = 1 pixel at 100% scaling). The standard size is limited to 90% of the destination work area.</value></data>
+  <data name="Settings_Exclusions" xml:space="preserve"><value>Excluded apps</value></data>
+  <data name="Settings_ExclusionsHelp" xml:space="preserve"><value>Apps listed here are not corrected automatically. Manual rescue still includes them.</value></data>
+  <data name="Settings_ProcessName" xml:space="preserve"><value>Process name (e.g. notepad)</value></data>
+  <data name="Settings_ExclusionScope" xml:space="preserve"><value>What to exclude</value></data>
+  <data name="Settings_AddExclusion" xml:space="preserve"><value>Add</value></data>
+  <data name="Settings_NoExclusions" xml:space="preserve"><value>No apps are excluded.</value></data>
+  <data name="Exclusion_All" xml:space="preserve"><value>All automatic correction</value></data>
+  <data name="Exclusion_SizeOnly" xml:space="preserve"><value>Size correction only</value></data>
+  <data name="Settings_Shortcuts" xml:space="preserve"><value>Keyboard shortcuts</value></data>
+  <data name="Settings_ShortcutsHelp" xml:space="preserve"><value>Select a field and press the new key combination. Use at least one of Ctrl, Alt, Shift, or Win. Press Delete to remove a shortcut.</value></data>
+  <data name="Settings_ResetShortcuts" xml:space="preserve"><value>Restore Default Shortcuts</value></data>
+  <data name="Shortcut_None" xml:space="preserve"><value>(None)</value></data>
+  <data name="Shortcut_CaptureHelp" xml:space="preserve"><value>Press the new key combination. Press Delete to remove it.</value></data>
+  <data name="Shortcut_Registered" xml:space="preserve"><value>Available</value></data>
+  <data name="Shortcut_Failed" xml:space="preserve"><value>Cannot be used because another app is using this key</value></data>
+  <data name="Shortcut_Duplicate" xml:space="preserve"><value>Already assigned to "{0}"</value></data>
+  <data name="Shortcut_Invalid" xml:space="preserve"><value>Not a valid key combination</value></data>
+  <data name="Shortcut_Unassigned" xml:space="preserve"><value>Not assigned</value></data>
+  <data name="Shortcut_Clear" xml:space="preserve"><value>Remove</value></data>
+  <data name="Shortcut_NeedModifier" xml:space="preserve"><value>Include Ctrl, Alt, Shift, or Win</value></data>
+  <data name="Action_RescueForeground" xml:space="preserve"><value>Move selected window to display {0}</value></data>
+  <data name="Action_RescueAll" xml:space="preserve"><value>Rescue all windows to display {0}</value></data>
+  <data name="Action_OpenList" xml:space="preserve"><value>Open window list</value></data>
+  <data name="Settings_ContextMenu" xml:space="preserve"><value>Desktop context menu</value></data>
+  <data name="Settings_ContextMenuHelp" xml:space="preserve"><value>Adds "Window Rescue" to the menu shown when you right-click an empty area of the desktop. In Windows 11, select "Show more options" to see it. Only your user account is affected, and no administrator rights are needed.</value></data>
+  <data name="Settings_Register" xml:space="preserve"><value>Add to Desktop Context Menu</value></data>
+  <data name="Settings_RegisterRepair" xml:space="preserve"><value>Fix Registration</value></data>
+  <data name="Settings_Unregister" xml:space="preserve"><value>Remove from Desktop Context Menu</value></data>
+  <data name="ContextMenu_Failed" xml:space="preserve"><value>The operation failed</value></data>
+  <data name="ContextMenu_CurrentState" xml:space="preserve"><value>Current state: {0}</value></data>
+  <data name="ContextMenu_NotRegistered" xml:space="preserve"><value>Not added</value></data>
+  <data name="ContextMenu_NotRegistered_Help" xml:space="preserve"><value>The menu item is not added to the desktop context menu.</value></data>
+  <data name="ContextMenu_Registered" xml:space="preserve"><value>Added</value></data>
+  <data name="ContextMenu_Registered_Help" xml:space="preserve"><value>Right-click the desktop and select "Show more options" to use it.</value></data>
+  <data name="ContextMenu_NeedsRepair" xml:space="preserve"><value>Registration needs to be fixed</value></data>
+  <data name="ContextMenu_NeedsRepair_Help" xml:space="preserve"><value>The registered location does not match this app (for example, the app was moved). Select "Fix Registration".</value></data>
+  <data name="Language_System" xml:space="preserve"><value>Use Windows Display Language</value></data>
+  <data name="Settings_Startup" xml:space="preserve"><value>Startup and permissions</value></data>
+  <data name="Settings_AutoStart" xml:space="preserve"><value>Start automatically when I sign in to Windows</value></data>
+  <data name="Settings_Privilege" xml:space="preserve"><value>Permission</value></data>
+  <data name="Settings_RunningStandard" xml:space="preserve"><value>Running with standard permissions. Windows of apps running as administrator may not be movable.</value></data>
+  <data name="Settings_RunningElevated" xml:space="preserve"><value>Running as administrator.</value></data>
+  <data name="Settings_StoredAt" xml:space="preserve"><value>Settings are stored only on this PC: {0}</value></data>
+</root>

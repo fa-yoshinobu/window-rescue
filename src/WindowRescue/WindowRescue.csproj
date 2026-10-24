@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>WindowRescue</AssemblyName>
+    <RootNamespace>WindowRescue</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\WindowRescue.ico</ApplicationIcon>
+    <NeutralLanguage>en</NeutralLanguage>
+    <!-- DPI 設定は WPF のため manifest で行う -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WPF と WinForms の同名型（Application など）の衝突を避ける -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\WindowRescue.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- バージョン情報に表示するアプリのライセンス（LICENSE がある場合だけ埋め込む） -->
+    <EmbeddedResource Include="..\..\LICENSE" LogicalName="WindowRescue.LICENSE" Condition="Exists('..\..\LICENSE')" />
+    <Resource Include="Assets\WindowRescue-256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="WindowRescue.Tests" />
+  </ItemGroup>
+
+</Project>

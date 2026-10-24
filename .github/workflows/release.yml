@@ -1,0 +1,58 @@
+# v で始まるタグ（例 v0.2.0）を push すると、テストして 1 ファイル exe を作り、GitHub リリースに添付する
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+
+      # バージョンは Directory.Build.props の <Version> を正とし、タグと一致しなければ中止する
+      - name: Check version
+        id: ver
+        shell: pwsh
+        run: |
+          $v = "${{ github.ref_name }}".TrimStart("v")
+          $props = ([xml](Get-Content Directory.Build.props -Raw)).Project.PropertyGroup.Version
+          if ($props -ne $v) { throw "タグ $v と Directory.Build.props の Version $props が一致しません" }
+          "version=$v" >> $env:GITHUB_OUTPUT
+
+      # 実際の画面・窓を操作する結合テストと、名前付きパイプのテストは CI では実行しない
+      - name: Test
+        run: dotnet test WindowRescue.slnx -c Release --filter "FullyQualifiedName!~IntegrationTests&FullyQualifiedName!~SingleInstanceTests"
+
+      - name: Publish single-file exe
+        run: >
+          dotnet publish src/WindowRescue/WindowRescue.csproj -c Release -r win-x64 --self-contained true
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true -p:DebugType=None
+          -o dist
+
+      - name: Prepare assets
+        shell: pwsh
+        run: |
+          $name = "WindowRescue-${{ steps.ver.outputs.version }}-win-x64.exe"
+          Move-Item dist/WindowRescue.exe "dist/$name"
+          $hash = (Get-FileHash "dist/$name" -Algorithm SHA256).Hash.ToLower()
+          # sha256sum -c で検証できるよう、改行は LF にする
+          [IO.File]::WriteAllText("$PWD/dist/$name.sha256", "$hash  $name`n")
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" (Get-ChildItem dist/*).FullName `
+            --title "Window Rescue ${{ steps.ver.outputs.version }}" --generate-notes

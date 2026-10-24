@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="App_Name" xml:space="preserve"><value>Window Rescue</value></data>
+  <data name="Menu_Title" xml:space="preserve"><value>ウインドウ救出</value></data>
+  <data name="Menu_RescueHere" xml:space="preserve"><value>この画面へ全ウインドウを救出</value></data>
+  <data name="Menu_OpenList" xml:space="preserve"><value>ウインドウ一覧</value></data>
+  <data name="Menu_OpenSettings" xml:space="preserve"><value>設定</value></data>
+  <data name="Menu_ShowMini" xml:space="preserve"><value>ミニウインドウを表示</value></data>
+  <data name="Mini_ThisDisplay" xml:space="preserve"><value>この画面：画面 {0}</value></data>
+  <data name="Mini_PinNew" xml:space="preserve"><value>新しい窓をこの画面に出す</value></data>
+  <data name="Mini_FixTiny" xml:space="preserve"><value>小さい窓を補正する</value></data>
+  <data name="Mini_Gather" xml:space="preserve"><value>窓をこの画面に集める</value></data>
+  <data name="Tiny_Fixed" xml:space="preserve"><value>小さい窓を補正しました</value></data>
+  <data name="Tiny_None" xml:space="preserve"><value>補正が必要な小さい窓はありません。</value></data>
+  <data name="Menu_OpenPanel" xml:space="preserve"><value>救出パネル</value></data>
+  <data name="Menu_PinNewWindows" xml:space="preserve"><value>新しい窓をこの画面（画面 {0}）に表示</value></data>
+  <data name="Pin_On" xml:space="preserve"><value>新しい窓を画面 {0} に表示します</value></data>
+  <data name="Pin_Off" xml:space="preserve"><value>新しい窓の表示先固定を解除しました</value></data>
+  <data name="Action_RescueHere" xml:space="preserve"><value>ポインターのある画面へ全ウインドウを救出</value></data>
+  <data name="Menu_RestartElevated" xml:space="preserve"><value>管理者として再起動</value></data>
+  <data name="Menu_About" xml:space="preserve"><value>バージョン情報</value></data>
+  <data name="About_Title" xml:space="preserve"><value>バージョン情報</value></data>
+  <data name="About_Version" xml:space="preserve"><value>バージョン：</value></data>
+  <data name="About_Company" xml:space="preserve"><value>開発元：</value></data>
+  <data name="About_Libraries" xml:space="preserve"><value>使用ライブラリ</value></data>
+  <data name="About_License" xml:space="preserve"><value>アプリのライセンス</value></data>
+  <data name="About_ColName" xml:space="preserve"><value>名前</value></data>
+  <data name="About_ColVersion" xml:space="preserve"><value>バージョン</value></data>
+  <data name="About_ColLicense" xml:space="preserve"><value>ライセンス</value></data>
+  <data name="About_ColPurpose" xml:space="preserve"><value>用途</value></data>
+  <data name="About_Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="About_PurposeApp" xml:space="preserve"><value>アプリ本体</value></data>
+  <data name="About_DadsTokens" xml:space="preserve"><value>DADS デザイントークン</value></data>
+  <data name="About_PurposeDads" xml:space="preserve"><value>画面の配色（© デジタル庁）</value></data>
+  <data name="About_PurposeRuntime" xml:space="preserve"><value>アプリの実行環境</value></data>
+  <data name="About_NoLicense" xml:space="preserve"><value>ライセンス本文は含まれていません。</value></data>
+  <data name="About_LinkError" xml:space="preserve"><value>ブラウザーを起動できませんでした。</value></data>
+  <data name="Settings_ShowAbout" xml:space="preserve"><value>バージョン情報を表示</value></data>
+  <data name="Menu_Exit" xml:space="preserve"><value>終了</value></data>
+  <data name="Common_Destination" xml:space="preserve"><value>救出先</value></data>
+  <data name="Common_On" xml:space="preserve"><value>オン</value></data>
+  <data name="Common_Off" xml:space="preserve"><value>オフ</value></data>
+  <data name="Common_Remove" xml:space="preserve"><value>削除</value></data>
+  <data name="Panel_WindowTitle" xml:space="preserve"><value>救出パネル - Window Rescue</value></data>
+  <data name="Panel_Heading" xml:space="preserve"><value>救出パネル</value></data>
+  <data name="Panel_Description" xml:space="preserve"><value>画面外や見えない画面にある窓、小さすぎて操作できない窓を救出先へ集めます。</value></data>
+  <data name="Panel_RescueAll" xml:space="preserve"><value>救出先へ全ウインドウを救出</value></data>
+  <data name="Panel_ThisDisplayIs" xml:space="preserve"><value>「この画面」は、このパネルを開いた画面 {0} です。</value></data>
+  <data name="Panel_LastResult" xml:space="preserve"><value>直前の結果</value></data>
+  <data name="Display_Label" xml:space="preserve"><value>画面 {0}：{1}（{2} × {3}、{4}%、Windows の DISPLAY{5}）</value></data>
+  <data name="List_WindowTitle" xml:space="preserve"><value>ウインドウ一覧 - Window Rescue</value></data>
+  <data name="List_RescueSelected" xml:space="preserve"><value>選択した窓を救出</value></data>
+  <data name="List_Refresh" xml:space="preserve"><value>最新の状態にする</value></data>
+  <data name="List_Search" xml:space="preserve"><value>アプリ名・プロセス名・タイトルで検索</value></data>
+  <data name="List_ProblemsOnly" xml:space="preserve"><value>問題のある窓だけ表示</value></data>
+  <data name="List_TableName" xml:space="preserve"><value>対象ウインドウ</value></data>
+  <data name="List_ColApp" xml:space="preserve"><value>アプリ名</value></data>
+  <data name="List_ColProcess" xml:space="preserve"><value>プロセス名</value></data>
+  <data name="List_ColTitle" xml:space="preserve"><value>ウインドウタイトル</value></data>
+  <data name="List_ColLocation" xml:space="preserve"><value>所在</value></data>
+  <data name="List_ColPosition" xml:space="preserve"><value>座標</value></data>
+  <data name="List_ColSize" xml:space="preserve"><value>幅 × 高さ</value></data>
+  <data name="List_ColState" xml:space="preserve"><value>状態</value></data>
+  <data name="List_ColIssues" xml:space="preserve"><value>問題</value></data>
+  <data name="List_Empty" xml:space="preserve"><value>該当する窓はありません。</value></data>
+  <data name="List_NoTitle" xml:space="preserve"><value>（タイトルなし）</value></data>
+  <data name="List_IssueSeparator" xml:space="preserve"><value>、</value></data>
+  <data name="List_Count_One" xml:space="preserve"><value>{0} 件を表示（問題のある窓は全体で {1} 件）</value></data>
+  <data name="List_Count_Other" xml:space="preserve"><value>{0} 件を表示（問題のある窓は全体で {1} 件）</value></data>
+  <data name="List_NoDestination" xml:space="preserve"><value>救出先を選んでください。</value></data>
+  <data name="List_SelectFirst" xml:space="preserve"><value>救出する窓を選んでください。</value></data>
+  <data name="State_Normal" xml:space="preserve"><value>通常</value></data>
+  <data name="State_Minimized" xml:space="preserve"><value>最小化</value></data>
+  <data name="State_Maximized" xml:space="preserve"><value>最大化</value></data>
+  <data name="Location_Offscreen" xml:space="preserve"><value>画面外</value></data>
+  <data name="Location_Display" xml:space="preserve"><value>画面 {0}</value></data>
+  <data name="Issue_NotResponding" xml:space="preserve"><value>応答なし</value></data>
+  <data name="Issue_Tiny" xml:space="preserve"><value>極小</value></data>
+  <data name="Issue_PartiallyOffscreen" xml:space="preserve"><value>一部が画面外</value></data>
+  <data name="Issue_NotOperable" xml:space="preserve"><value>操作不可</value></data>
+  <data name="Status_Success" xml:space="preserve"><value>成功</value></data>
+  <data name="Status_Warning" xml:space="preserve"><value>注意</value></data>
+  <data name="Status_Error" xml:space="preserve"><value>エラー</value></data>
+  <data name="Status_Info" xml:space="preserve"><value>お知らせ</value></data>
+  <data name="Result_RescuedTo" xml:space="preserve"><value>画面 {0} へ救出しました</value></data>
+  <data name="Result_Summary" xml:space="preserve"><value>移動：{0} 件　対象外：{1} 件　失敗：{2} 件</value></data>
+  <data name="Reason_Excluded" xml:space="preserve"><value>設定で除外しています</value></data>
+  <data name="Reason_NotResponding" xml:space="preserve"><value>アプリが応答していません</value></data>
+  <data name="Reason_Unexpected" xml:space="preserve"><value>予期しないエラーが発生しました</value></data>
+  <data name="Reason_Closed" xml:space="preserve"><value>窓が閉じられています</value></data>
+  <data name="Reason_MoveRefused" xml:space="preserve"><value>アプリが移動・サイズ変更を受け付けませんでした</value></data>
+  <data name="Reason_AccessDenied" xml:space="preserve"><value>管理者権限で動くアプリの窓は移動できません。本アプリを管理者として再起動すると移動できます。</value></data>
+  <data name="Reason_DoesNotFit" xml:space="preserve"><value>完全には収まらないため、タイトルバーを見える位置に置きました</value></data>
+  <data name="Error_SaveSettings" xml:space="preserve"><value>設定を保存できませんでした</value></data>
+  <data name="Error_Unexpected" xml:space="preserve"><value>予期しないエラーが発生しました</value></data>
+  <data name="Error_DisplayNotConnected" xml:space="preserve"><value>画面 {0} は接続されていません。窓は移動していません。</value></data>
+  <data name="Error_NoActiveWindow" xml:space="preserve"><value>移動できる選択中の窓がありません。</value></data>
+  <data name="Error_ContextMenuLabels" xml:space="preserve"><value>表示言語は変更しましたが、デスクトップメニューの表示を更新できませんでした。設定の「登録を修正する」を実行してください。</value></data>
+  <data name="Error_AutoStart" xml:space="preserve"><value>自動起動の設定を変更できませんでした</value></data>
+  <data name="Error_InvalidNumber" xml:space="preserve"><value>入力値が正しくありません</value></data>
+  <data name="Error_InvalidNumberHint" xml:space="preserve"><value>極小判定は 20〜2000、標準サイズの幅は 200〜8000、高さは 150〜8000（DIP）の整数で入力してください。保存していません。</value></data>
+  <data name="Settings_WindowTitle" xml:space="preserve"><value>設定 - Window Rescue</value></data>
+  <data name="Settings_Heading" xml:space="preserve"><value>設定</value></data>
+  <data name="Settings_QuickActions" xml:space="preserve"><value>救出</value></data>
+  <data name="Settings_Monitoring" xml:space="preserve"><value>新しい窓の自動救出</value></data>
+  <data name="Mode_Off" xml:space="preserve"><value>監視しない</value></data>
+  <data name="Mode_OffHelp" xml:space="preserve"><value>新しい窓を補正しません。手動の救出は使えます。</value></data>
+  <data name="Mode_Auto" xml:space="preserve"><value>自動救出</value></data>
+  <data name="Mode_AutoHelp" xml:space="preserve"><value>画面外・はみ出し・極小で開いた窓だけを補正します。正常な窓は動かしません。</value></data>
+  <data name="Mode_Fixed" xml:space="preserve"><value>表示先を固定</value></data>
+  <data name="Mode_FixedHelp" xml:space="preserve"><value>新しい窓を救出先へ移します。トレイメニューの「新しい窓をこの画面に表示」でも切り替えられます。</value></data>
+  <data name="Settings_AutoResize" xml:space="preserve"><value>自動サイズ補正：{0}</value></data>
+  <data name="Settings_AutoResizeHelp" xml:space="preserve"><value>サイズ変更できる窓が極端に小さい場合に拡大します。サイズ固定の窓やダイアログは拡大しません。</value></data>
+  <data name="Settings_TinyWidth" xml:space="preserve"><value>極小と判定する幅（未満）</value></data>
+  <data name="Settings_TinyHeight" xml:space="preserve"><value>極小と判定する高さ（未満）</value></data>
+  <data name="Settings_StdWidth" xml:space="preserve"><value>標準救出サイズの幅</value></data>
+  <data name="Settings_StdHeight" xml:space="preserve"><value>標準救出サイズの高さ</value></data>
+  <data name="Settings_DipHelp" xml:space="preserve"><value>単位は DIP（拡大率 100% での 1 ピクセル）です。標準救出サイズは救出先の作業領域の 90% までに制限します。</value></data>
+  <data name="Settings_Exclusions" xml:space="preserve"><value>除外するアプリ</value></data>
+  <data name="Settings_ExclusionsHelp" xml:space="preserve"><value>ここに登録したアプリは自動補正しません。手動の救出には含まれます。</value></data>
+  <data name="Settings_ProcessName" xml:space="preserve"><value>プロセス名（例：notepad）</value></data>
+  <data name="Settings_ExclusionScope" xml:space="preserve"><value>除外する範囲</value></data>
+  <data name="Settings_AddExclusion" xml:space="preserve"><value>追加</value></data>
+  <data name="Settings_NoExclusions" xml:space="preserve"><value>除外しているアプリはありません。</value></data>
+  <data name="Exclusion_All" xml:space="preserve"><value>自動補正すべて</value></data>
+  <data name="Exclusion_SizeOnly" xml:space="preserve"><value>サイズ補正だけ</value></data>
+  <data name="Settings_Shortcuts" xml:space="preserve"><value>ショートカット</value></data>
+  <data name="Settings_ShortcutsHelp" xml:space="preserve"><value>欄を選んで新しいキーの組み合わせを押します。Ctrl・Alt・Shift・Win のいずれかを含めてください。Delete キーで割り当てを外します。</value></data>
+  <data name="Settings_ResetShortcuts" xml:space="preserve"><value>初期設定に戻す</value></data>
+  <data name="Shortcut_None" xml:space="preserve"><value>（なし）</value></data>
+  <data name="Shortcut_CaptureHelp" xml:space="preserve"><value>新しいキーの組み合わせを押してください。Delete キーで割り当てを外します。</value></data>
+  <data name="Shortcut_Registered" xml:space="preserve"><value>使用できます</value></data>
+  <data name="Shortcut_Failed" xml:space="preserve"><value>他のアプリが使用中のため使えません</value></data>
+  <data name="Shortcut_Duplicate" xml:space="preserve"><value>「{0}」と重複しています</value></data>
+  <data name="Shortcut_Invalid" xml:space="preserve"><value>キーの組み合わせが正しくありません</value></data>
+  <data name="Shortcut_Unassigned" xml:space="preserve"><value>割り当てなし</value></data>
+  <data name="Shortcut_Clear" xml:space="preserve"><value>外す</value></data>
+  <data name="Shortcut_NeedModifier" xml:space="preserve"><value>Ctrl・Alt・Shift・Win のいずれかを含めてください</value></data>
+  <data name="Action_RescueForeground" xml:space="preserve"><value>選択中の窓を画面 {0} へ救出</value></data>
+  <data name="Action_RescueAll" xml:space="preserve"><value>全ウインドウを画面 {0} へ救出</value></data>
+  <data name="Action_OpenList" xml:space="preserve"><value>ウインドウ一覧を開く</value></data>
+  <data name="Settings_ContextMenu" xml:space="preserve"><value>右クリックメニュー</value></data>
+  <data name="Settings_ContextMenuHelp" xml:space="preserve"><value>デスクトップの何もない場所を右クリックしたメニューに「ウインドウ救出」を追加します。Windows 11 では「その他のオプションを確認」を選ぶと表示されます。現在のユーザーだけに登録し、管理者権限は不要です。</value></data>
+  <data name="Settings_Register" xml:space="preserve"><value>登録する</value></data>
+  <data name="Settings_RegisterRepair" xml:space="preserve"><value>登録を修正する</value></data>
+  <data name="Settings_Unregister" xml:space="preserve"><value>登録を解除する</value></data>
+  <data name="ContextMenu_Failed" xml:space="preserve"><value>操作に失敗しました</value></data>
+  <data name="ContextMenu_CurrentState" xml:space="preserve"><value>現在の状態：{0}</value></data>
+  <data name="ContextMenu_NotRegistered" xml:space="preserve"><value>未登録</value></data>
+  <data name="ContextMenu_NotRegistered_Help" xml:space="preserve"><value>デスクトップの右クリックメニューには追加されていません。</value></data>
+  <data name="ContextMenu_Registered" xml:space="preserve"><value>登録済み</value></data>
+  <data name="ContextMenu_Registered_Help" xml:space="preserve"><value>デスクトップを右クリックし「その他のオプションを確認」から使えます。</value></data>
+  <data name="ContextMenu_NeedsRepair" xml:space="preserve"><value>登録先の修正が必要</value></data>
+  <data name="ContextMenu_NeedsRepair_Help" xml:space="preserve"><value>登録されている起動先がこのアプリと一致しません（アプリを移動した場合など）。「登録を修正する」を選んでください。</value></data>
+  <data name="Language_System" xml:space="preserve"><value>Windowsに合わせる</value></data>
+  <data name="Settings_Startup" xml:space="preserve"><value>起動と権限</value></data>
+  <data name="Settings_AutoStart" xml:space="preserve"><value>Windows へのサインイン時に自動で起動する</value></data>
+  <data name="Settings_Privilege" xml:space="preserve"><value>権限</value></data>
+  <data name="Settings_RunningStandard" xml:space="preserve"><value>標準の権限で動作しています。管理者権限で動くアプリの窓は移動できない場合があります。</value></data>
+  <data name="Settings_RunningElevated" xml:space="preserve"><value>管理者権限で動作しています。</value></data>
+  <data name="Settings_StoredAt" xml:space="preserve"><value>設定はこの PC 内だけに保存します：{0}</value></data>
+</root>
