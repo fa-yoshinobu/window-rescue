@@ -25,7 +25,9 @@
 
 ## ダウンロード・動作環境
 
-[Releases](https://github.com/fa-yoshinobu/window-rescue/releases) から `WindowRescue-<版>-win-x64.exe` を取得して実行します。
+[Releases](https://github.com/fa-yoshinobu/window-rescue/releases) から `WindowRescue.exe` を取得して実行します。ファイル名は版によらず同じなので、更新するときはアプリを終了して exe を上書きするだけです（設定は引き継がれます）。
+
+最新版の直接リンク：<https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue.exe>
 
 - Windows 11（x64）
 - インストール不要。.NET も同梱しているため、別途インストールする必要はありません

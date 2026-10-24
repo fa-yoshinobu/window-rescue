@@ -43,8 +43,8 @@ jobs:
       - name: Prepare assets
         shell: pwsh
         run: |
-          $name = "WindowRescue-${{ steps.ver.outputs.version }}-win-x64.exe"
-          Move-Item dist/WindowRescue.exe "dist/$name"
+          # 更新時に置き換えやすいよう、ファイル名にバージョンを入れない
+          $name = "WindowRescue.exe"
           $hash = (Get-FileHash "dist/$name" -Algorithm SHA256).Hash.ToLower()
           # sha256sum -c で検証できるよう、改行は LF にする
           [IO.File]::WriteAllText("$PWD/dist/$name.sha256", "$hash  $name`n")
