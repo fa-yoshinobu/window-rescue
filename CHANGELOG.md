@@ -2,6 +2,16 @@
 
 この形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に基づきます。
 
+## [Unreleased]
+
+### Changed
+
+- Standardized fixed-name Windows ZIP assets, ZIP SHA-256 checksums and English release notes.
+
+### Fixed
+
+- Unified VirusTotal completion checks and preserved unrelated release notes during rescans.
+
 ## [0.2.0] - 2026-10-24
 
 初回リリース。
