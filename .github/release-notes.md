@@ -5,7 +5,7 @@
 ## Getting started
 Extract the ZIP file, then run `WindowRescue.exe`.
 
-Requirements: Windows x64. The .NET runtime is included.
+Requirements: Windows 11 (x64). The .NET runtime is included.
 
 ## Changes
 ### Changed

@@ -4,7 +4,6 @@ GitHub Markdown task lists: `- [ ]` open, `- [x]` completed.
 
 ## Open
 
-- [ ] 次回のリリースで、新しいZIP・SHA-256・英語本文・VirusTotal結果の掲載を確認する（今回は未リリース）。
 
 ### 実機での確認
 
@@ -28,6 +27,8 @@ GitHub Markdown task lists: `- [ ]` open, `- [x]` completed.
 - [ ] 登録済みのデスクトップ右クリックメニューを、起動時に今の項目へ自動で更新する（解除済みなら登録しない）
 
 ## Completed
+
+- [x] v0.2.1: 公開ZIPとSHA-256、EXEのバージョンとハッシュ、英語本文、VirusTotal解析完了と結果リンク掲載を確認。
 
 ### リリース
 

@@ -25,9 +25,9 @@
 
 ## ダウンロード・動作環境
 
-[Releases](https://github.com/fa-yoshinobu/window-rescue/releases) から `WindowRescue.exe` を取得して実行します。ファイル名は版によらず同じなので、更新するときはアプリを終了して exe を上書きするだけです（設定は引き継がれます）。
+[Releases](https://github.com/fa-yoshinobu/window-rescue/releases) から `WindowRescue-win-x64.zip` を取得・展開し、`WindowRescue.exe` を実行します。ファイル名は版によらず同じなので、更新するときはアプリを終了して exe を上書きするだけです（設定は引き継がれます）。
 
-最新版の直接リンク：<https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue.exe>
+最新版の直接リンク：<https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip>
 
 - Windows 11（x64）
 - インストール不要。.NET も同梱しているため、別途インストールする必要はありません
@@ -54,9 +54,9 @@
 
 [MIT License](LICENSE) © 2026 FA Labo
 
-## Release distribution (next release)
+## Release distribution
 
-The fixed-name ZIP and checksum links below become available with the next standard release. Existing release assets and the download links above remain unchanged.
+The fixed-name ZIP and checksum links below are available for the current release. Older releases retain their original assets.
 
 - [Latest Windows x64 ZIP](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip)
 - [ZIP SHA-256 checksum](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip.sha256)
@@ -64,7 +64,7 @@ The fixed-name ZIP and checksum links below become available with the next stand
 
 Extract the ZIP file, then run `WindowRescue.exe`.
 
-Windows x64. The .NET runtime is included.
+Windows 11 (x64). The .NET runtime is included.
 
 Release notes and VirusTotal scan messages are in English. Existing project documents may keep their current language.
 
