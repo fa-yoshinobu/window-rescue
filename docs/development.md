@@ -36,6 +36,21 @@ dotnet publish src/WindowRescue/WindowRescue.csproj -c Release -r win-x64 --self
 
 製品名・バージョン・開発元・著作権はルートの `Directory.Build.props` で管理します。exe のプロパティと、アプリの「バージョン情報」（トレイメニュー・設定画面から表示）に反映されます。
 
+### 同梱ランタイムの更新
+
+`WindowRescue.csproj` の `RuntimeFrameworkVersion` は固定を続けます。自己完結型の配布物に入る版を明示し、開発機とCIのSDKの違いで古い版へ戻ったり、未検証の版へ変わったりすることを防ぐためです。
+
+`Check bundled runtime` ワークフローが毎週水曜02:23 UTC、手動実行時、ランタイム設定・検知スクリプトを変更するPRで、[Microsoftの公開メタデータ](https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json)と比較します。古い版・サポート終了・取得失敗はジョブ失敗として表示されます。GitHubのActions通知を有効にして失敗通知を受け取ってください。この通信は保守用CIだけで行い、アプリには更新確認通信を追加しません。定期実行はワークフローが既定ブランチに入った後に有効になります。導入前のブランチではPRのチェックを利用でき、一度実行されたワークフローはGitHub CLI/APIでブランチを指定して手動実行することもできます。
+
+ランタイムだけを更新する場合：
+
+1. 公式メタデータの同じmajor.minorの最新安定版へ `RuntimeFrameworkVersion` を変更する。
+2. `python .github/scripts/check_runtime.py`、共通ビルド・テストを実行する。
+3. 自己完結型で発行し、`obj/project.assets.json` の `Microsoft.NETCore.App.Runtime.win-x64` と `Microsoft.WindowsDesktop.App.Runtime.win-x64` が指定版であること、発行したexeの起動・救出を確認する。
+4. アプリのパッチ番号を上げ、`CHANGELOG.md` にランタイムの旧版・新版を記載する。通常のリリース手順でタグと配布物を作成する。既存の配布済みexeには自動で反映されない。
+
+検知の検証は作業ブランチの固定値を1パッチ古くしてPRのチェックを実行し、失敗を確認してから固定値を戻します。PRで起動済みなら、`gh workflow run runtime-update.yml --ref <作業ブランチ>` でも確認できます。Actions画面の手動実行ボタンは既定ブランチへの導入後に表示されます。ローカルでも同じスクリプトが終了コード1を返します。
+
 ## リリース
 
 1. `Directory.Build.props` の `<Version>` と `CHANGELOG.md` を更新してコミットする
