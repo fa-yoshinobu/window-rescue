@@ -64,6 +64,7 @@ public sealed class AppController : IDisposable
         _displayChangeTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(800), DispatcherPriority.Background, (_, _) => OnDisplaysSettled(), dispatcher);
         _displayChangeTimer.Stop();
         SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
+        SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
 
         Loc.Instance.LanguageChanged += OnLanguageChanged;
         RepairContextMenuOnStartup();
@@ -82,12 +83,12 @@ public sealed class AppController : IDisposable
     /// <summary>カーソル位置の接続中画面。表示できない場合は、救出先・使用中画面・接続中画面の順に代替する。</summary>
     public DisplayInfo UiDisplayAt((int x, int y) p)
     {
-        var fresh = MonitorService.GetDisplays();
-        return MonitorService.FromPoint(fresh, p.x, p.y)
-            ?? MonitorService.FromPoint(fresh, Cursor().x, Cursor().y)
+        var connected = Displays.Connected;
+        return MonitorService.FromPoint(connected, p.x, p.y)
+            ?? MonitorService.FromPoint(connected, Cursor().x, Cursor().y)
             ?? Displays.GetDestination(p)
             ?? Displays.Connected.FirstOrDefault()
-            ?? fresh.First();
+            ?? connected.First();
     }
 
     public void Save()
@@ -239,7 +240,6 @@ public sealed class AppController : IDisposable
     public void RescueAllHere((int x, int y) p)
     {
         var ui = UiDisplayAt(p);
-        Displays.Refresh(MonitorService.GetDisplays(), p);
         var here = MonitorService.FromPoint(Displays.Connected, p.x, p.y) ?? ui;
         RescueAllTo(here, ui);
     }
@@ -321,7 +321,6 @@ public sealed class AppController : IDisposable
 
     private DisplayInfo? ResolveNumberedTarget(int n, DisplayInfo ui)
     {
-        Displays.Refresh(MonitorService.GetDisplays(), Cursor());
         var target = Displays.ByNumber(n);
         if (target == null) Notify(ui, StatusKind.Warning, Loc.F("Error_DisplayNotConnected", n));
         return target;
@@ -486,10 +485,23 @@ public sealed class AppController : IDisposable
     private void OnDisplaysSettled()
     {
         _displayChangeTimer.Stop();
+        RefreshDisplays();
+        InspectExistingWindows();
+    }
+
+    private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+    {
+        // タスクバーなどによる作業領域の変更。壁紙変更も同じカテゴリなので、既存窓の救出は行わない。
+        if (e.Category == UserPreferenceCategory.Desktop)
+            _dispatcher.BeginInvoke(RefreshDisplays);
+    }
+
+    /// <summary>画面構成変更時と一覧の「更新」時にキャッシュを更新する。通常の表示・移動は Connected を使う。</summary>
+    public void RefreshDisplays()
+    {
         Displays.Refresh(MonitorService.GetDisplays(), Cursor());
         ApplyHotkeys();
         RaiseStateChanged();
-        InspectExistingWindows();
         _tray.RebuildMenu();
     }
 
@@ -626,6 +638,7 @@ public sealed class AppController : IDisposable
     {
         InputLanguageManager.Current.InputLanguageChanged -= OnInputLanguageChanged;
         SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
+        SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
         Loc.Instance.LanguageChanged -= OnLanguageChanged;
         _watcher.Dispose();
         _hotkeys.Dispose();

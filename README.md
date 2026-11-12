@@ -23,11 +23,13 @@
 - 最小化・最大化の状態を保ったまま移動。画面ごとの拡大率（DPI）の違いにも対応
 - 日本語／English の切り替え。デジタル庁デザインシステム（DADS）を基準にした画面
 
+<a id="download"></a>
+
 ## ダウンロード・動作環境
 
 [Releases](https://github.com/fa-yoshinobu/window-rescue/releases) から `WindowRescue-win-x64.zip` を取得・展開し、`WindowRescue.exe` を実行します。ファイル名は版によらず同じなので、更新するときはアプリを終了して exe を上書きするだけです（設定は引き継がれます）。
 
-最新版の直接リンク：<https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip>
+[最新版ZIP / Latest Windows x64 ZIP](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip) · [SHA-256](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip.sha256)
 
 - Windows 11（x64）
 - インストール不要。.NET も同梱しているため、別途インストールする必要はありません
@@ -54,18 +56,8 @@
 
 [MIT License](LICENSE) © 2026 FA Labo
 
-## Release distribution
+## English
 
-The fixed-name ZIP and checksum links below are available for the current release. Older releases retain their original assets.
+Window Rescue brings off-screen or tiny windows back to a usable display on Windows 11 (x64). Japanese and English interfaces are included, along with the .NET runtime.
 
-- [Latest Windows x64 ZIP](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip)
-- [ZIP SHA-256 checksum](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip.sha256)
-- [Changelog](CHANGELOG.md) / [TODO](TODO.md)
-
-Extract the ZIP file, then run `WindowRescue.exe`.
-
-Windows 11 (x64). The .NET runtime is included.
-
-Release notes and VirusTotal scan messages are in English. Existing project documents may keep their current language.
-
-Maintainers: update the English Changes section in `.github/release-notes.md` from the relevant CHANGELOG entries before releasing. The release workflow publishes the ZIP and checksum, then scans the actual published executables. Use the `Scan release with VirusTotal` workflow with a release tag to retry an incomplete scan. See the [shared release standard](https://github.com/fa-yoshinobu/release_standard).
+Use the [ZIP and checksum links above](#download), extract the ZIP, and run `WindowRescue.exe`. Settings stay on this PC; the app makes no external network connections.

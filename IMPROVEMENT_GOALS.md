@@ -1,6 +1,6 @@
 # Window Rescue 改善ゴール
 
-[README](../README.md) · [使い方](usage.md) · [開発・ビルド](development.md) · [TODO](../TODO.md)
+[README](README.md) · [使い方](docs/usage.md) · [開発・ビルド](docs/development.md) · [TODO](TODO.md)
 
 v0.2.1 時点のコードレビューに基づく改善項目です。1ゴール＝1つの独立した作業単位で、上から順に着手することを想定しています。
 
@@ -31,7 +31,7 @@ dotnet test WindowRescue.slnx
 | G8 | 応答しない窓・同時実行で窓が予期せず動かない | 中 | 完了（2026-11-12） |
 | G9 | コメントの仕様参照が読める | 中 | 完了（2026-11-12） |
 | G10 | 未完成の箇所を仕上げる | 中 | 完了（2026-11-12） |
-| G11 | 文書・ビルド周りの整理 | 低 | 未着手 |
+| G11 | 文書・ビルド周りの整理 | 低 | 完了（2026-11-12） |
 
 ---
 
@@ -274,11 +274,13 @@ dotnet test WindowRescue.slnx
 **Goal**: 下記の小さな問題がそれぞれ解消されている。項目ごとに独立して着手できる。
 
 **完了条件**
-- [ ] **`build.bat`**: UTF-8にして `chcp 65001` を入れ、日本語以外のWindowsやGitHub上で文字化けしない。配布ZIPも作る。
-- [ ] **`.gitattributes` / `.editorconfig`**: 改行と文字コード、C#の書式を定義している。
-- [ ] **README**: 末尾の英語ブロックと日本語本文でダウンロードリンクが重複しない。保守者向けの手順は `development.md` に移す。
-- [ ] **TODO**: 毎リリースで使う実機確認表を `docs/` 配下に分け、`TODO.md` は残件だけにする。本書を残件一覧とするなら `TODO.md` からリンクする。
-- [ ] **画面情報のキャッシュ**: `MonitorService.GetDisplays()` の呼び出しを、画面構成の変更時と明示的な更新時に絞る。
-- [ ] **重複の解消**: `WindowEnumerator.ShellClasses` の重複項目を除く。
+- [x] **`build.bat`**: UTF-8にして `chcp 65001` を入れ、日本語以外のWindowsやGitHub上で文字化けしない。配布ZIPも作る。
+- [x] **`.gitattributes` / `.editorconfig`**: 改行と文字コード、C#の書式を定義している。
+- [x] **README**: 末尾の英語ブロックと日本語本文でダウンロードリンクが重複しない。保守者向けの手順は `development.md` に移す。
+- [x] **TODO**: 毎リリースで使う実機確認表を `docs/` 配下に分け、`TODO.md` は残件だけにする。本書を残件一覧とするなら `TODO.md` からリンクする。
+- [x] **画面情報のキャッシュ**: `MonitorService.GetDisplays()` の呼び出しを、画面構成の変更時と明示的な更新時に絞る。
+- [x] **重複の解消**: `WindowEnumerator.ShellClasses` の重複項目を除く。
 
 **検証**: 共通検証と、各項目の目視確認。
+
+**検証記録（2026-11-12）**: ビルド（警告0）と全83テスト成功（スキップ0）。UTF-8・CRLFのbuild.batを実行し、exeとZIPの生成、日本語出力、ZIP内exeとのSHA-256一致を確認。READMEのダウンロードURL重複と文書間リンクを検査。実AppControllerの検証ホストで100回の表示更新中に画面スナップショットを維持し、明示更新・画面構成変更通知・作業領域変更通知で再取得されることを確認した。物理的な画面の抜き差しは今回の検証には含めない。設定は復元済み。

@@ -24,7 +24,7 @@ dotnet test WindowRescue.slnx -c Release --no-build --settings tests/ci.runsetti
 
 ## 1 ファイル exe の作成
 
-`build.bat` を実行すると `dist\WindowRescue.exe`（.NET ランタイム同梱）を作ります。アプリが起動中だと上書きできないため、トレイの「終了」で閉じてから実行します。
+`build.bat` を実行すると `dist\WindowRescue.exe`（.NET ランタイム同梱）と `dist\WindowRescue-win-x64.zip` を作ります。UTF-8のバッチで、起動時にコードページ65001へ切り替えます。アプリが起動中だと上書きできないため、トレイの「終了」で閉じてから実行します。
 
 コマンドで行う場合：
 
@@ -53,8 +53,9 @@ dotnet publish src/WindowRescue/WindowRescue.csproj -c Release -r win-x64 --self
 
 ## リリース
 
-1. `Directory.Build.props` の `<Version>` と `CHANGELOG.md` を更新してコミットする
-2. 同じ番号のタグを push する
+1. [リリース実機確認表](release-checklist.md)をリリースごとに実施する。
+2. `Directory.Build.props` の `<Version>` と `CHANGELOG.md` を更新し、該当変更を `.github/release-notes.md` の英語のChanges欄へ反映してコミットする。
+3. 同じ番号のタグを push する。
 
 `v` で始まるタグを push すると、GitHub Actions（`.github/workflows/release.yml`）がタグと `Directory.Build.props` のバージョンの一致を確かめ、テストして 1 ファイル exe を作り、GitHub リリースに添付します。画面を操作する結合テストとプロセス間通信のテストは CI では実行しません。
 
@@ -63,9 +64,13 @@ git tag v0.2.0
 git push origin v0.2.0
 ```
 
+配布は固定名のZIPとSHA-256を使い、過去のリリースの添付物は変更しません。リリースノートとVirusTotalの結果メッセージは英語で記載します。ワークフローは公開済みZIP内のexeを実際にスキャンします。未完了の解析は `Scan release with VirusTotal` にリリースタグを指定して再試行できます。詳細は[共通リリース基準](https://github.com/fa-yoshinobu/release_standard)を参照してください。
+
 ## 構成
 
 設定形式の移行は `SettingsStore.MigrateAndValidate` にまとめます。現在の公開形式はVersion 1だけです。形式を変更する場合は旧版ごとの移行をここへ追加し、移行後に設定画面と同じ数値範囲で検証します。未知の新しいVersionは読み替えず、元ファイルを保存禁止にして今回だけ既定値で起動します。起動時と設定画面でその旨を案内します。既知形式の破損は従来どおり `.broken` へ退避します。
+
+画面情報は `DisplayManager.Connected` に保持します。OSからの取得は起動時、画面構成・作業領域の変更時、ウインドウ一覧の「更新」を押したときだけ行います。ミニウインドウの移動や表示更新では取得し直しません。形式は `.editorconfig`、改行は `.gitattributes` で指定し、バッチのみCRLF、他のテキストはLF・UTF-8を使います。
 
 | パス | 内容 |
 | --- | --- |

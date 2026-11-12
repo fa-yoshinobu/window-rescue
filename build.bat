@@ -1,11 +1,12 @@
 @echo off
-rem Window Rescue ‚Ì 1 ƒtƒ@ƒCƒ‹ exei.NET ƒ‰ƒ“ƒ^ƒCƒ€“¯«j‚ğ dist\ ‚Éì‚é
+chcp 65001 >nul
+rem Window Rescue ã® 1 ãƒ•ã‚¡ã‚¤ãƒ« exeï¼ˆ.NET ãƒ©ãƒ³ã‚¿ã‚¤ãƒ åŒæ¢±ï¼‰ã‚’ dist\ ã«ä½œã‚‹
 setlocal
 cd /d "%~dp0"
 
 tasklist /fi "imagename eq WindowRescue.exe" | find /i "WindowRescue.exe" >nul
 if not errorlevel 1 (
-    echo WindowRescue.exe ‚ª‹N“®’†‚Å‚·BƒgƒŒƒC‚ÌuI—¹v‚Å•Â‚¶‚Ä‚©‚çÀs‚µ‚Ä‚­‚¾‚³‚¢B
+    echo WindowRescue.exe ãŒèµ·å‹•ä¸­ã§ã™ã€‚ãƒˆãƒ¬ã‚¤ã®ã€Œçµ‚äº†ã€ã§é–‰ã˜ã¦ã‹ã‚‰å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚
     pause
     exit /b 1
 )
@@ -14,11 +15,19 @@ dotnet publish src\WindowRescue\WindowRescue.csproj -c Release -r win-x64 --self
   -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true ^
   -p:EnableCompressionInSingleFile=true -p:DebugType=None -o dist
 if errorlevel 1 (
-    echo ƒrƒ‹ƒh‚É¸”s‚µ‚Ü‚µ‚½B
+    echo ãƒ“ãƒ«ãƒ‰ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
+    pause
+    exit /b 1
+)
+
+powershell -NoProfile -Command "Compress-Archive -LiteralPath 'dist\WindowRescue.exe' -DestinationPath 'dist\WindowRescue-win-x64.zip' -Force -ErrorAction Stop"
+if errorlevel 1 (
+    echo ZIP ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸã€‚
     pause
     exit /b 1
 )
 
 echo.
-echo ì¬‚µ‚Ü‚µ‚½: %~dp0dist\WindowRescue.exe
+echo ä½œæˆã—ã¾ã—ãŸ: %~dp0dist\WindowRescue.exe
+echo é…å¸ƒç”¨ ZIP: %~dp0dist\WindowRescue-win-x64.zip
 pause
