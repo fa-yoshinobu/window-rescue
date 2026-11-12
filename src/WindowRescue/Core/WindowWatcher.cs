@@ -95,7 +95,7 @@ public sealed class WindowWatcher : IDisposable
 
         PixelRect? corrected;
         try { corrected = await _check(t.Handle, recheck); }
-        catch (Exception) { corrected = null; }
+        catch (Exception ex) { Log.Error("Automatic window correction", ex); corrected = null; }
         if (t.UserMoved) { _tracked.Remove(t.Handle); return; }
         if (corrected != null)
         {

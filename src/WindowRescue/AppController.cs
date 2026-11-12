@@ -196,7 +196,11 @@ public sealed class AppController : IDisposable
             {
                 _pending = null;
                 try { await next(); }
-                catch (Exception ex) { Notify(null, StatusKind.Error, Loc.T("Error_Unexpected"), ex.Message); }
+                catch (Exception ex)
+                {
+                    Log.Error("Rescue operation", ex);
+                    Notify(null, StatusKind.Error, Loc.T("Error_Unexpected"), ex.Message);
+                }
                 next = _pending;
             }
         }
@@ -481,6 +485,7 @@ public sealed class AppController : IDisposable
         }
         catch (Exception ex)
         {
+            Log.Error("Register context menu", ex);
             LastContextMenuError = ex.Message;
             StateChanged?.Invoke();
             return false;
@@ -499,6 +504,7 @@ public sealed class AppController : IDisposable
         }
         catch (Exception ex)
         {
+            Log.Error("Unregister context menu", ex);
             LastContextMenuError = ex.Message;
             StateChanged?.Invoke();
             return false;
@@ -524,6 +530,7 @@ public sealed class AppController : IDisposable
             }
             catch (Exception ex)
             {
+                Log.Error("Update context menu labels", ex);
                 LastContextMenuError = ex.Message;
                 Notify(null, StatusKind.Warning, Loc.T("Error_ContextMenuLabels"), ex.Message);
             }
@@ -536,7 +543,11 @@ public sealed class AppController : IDisposable
     public void SetAutoStart(bool enabled)
     {
         try { AutoStart.Set(ExePath, enabled); }
-        catch (Exception ex) { Notify(null, StatusKind.Error, Loc.T("Error_AutoStart"), ex.Message); }
+        catch (Exception ex)
+        {
+            Log.Error("Set automatic startup", ex);
+            Notify(null, StatusKind.Error, Loc.T("Error_AutoStart"), ex.Message);
+        }
         StateChanged?.Invoke();
     }
 

@@ -150,6 +150,15 @@
                 </StackPanel>
             </Border>
 
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Logs}" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_LogsHelp}" />
+                    <TextBlock x:Name="LogPathText" Style="{StaticResource Help}" />
+                    <Button Margin="0,8,0,0" Click="OpenLogs_Click"><TextBlock Text="{l:T Settings_OpenLogs}" /></Button>
+                </StackPanel>
+            </Border>
+
             <!-- バージョン情報 -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>

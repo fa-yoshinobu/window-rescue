@@ -116,8 +116,9 @@ public static class ContextMenuRegistrar
             Registry.CurrentUser.DeleteSubKeyTree(KeyPath, false);
             if (backup != null) Write(backup);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Error("Restore context menu registry", ex);
             // 戻せない場合は、呼び出し元が状態を再確認して表示する
         }
 

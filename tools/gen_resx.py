@@ -2,6 +2,11 @@ import sys
 from xml.sax.saxutils import escape
 
 S = [
+ ("Error_Logged", "Error details were recorded in the local log. You can open its folder from Settings.", "エラーの詳細をローカルのログに記録しました。設定から保存フォルダーを開けます。"),
+ ("Settings_Logs", "Error logs", "エラーログ"),
+ ("Settings_LogsHelp", "Logs stay on this PC (up to two 1 MB files). Window titles are not recorded.", "ログはこの PC 内だけに保存します（最大 1 MB × 2 世代）。窓のタイトルは記録しません。"),
+ ("Settings_OpenLogs", "Open Log Folder", "ログの保存フォルダーを開く"),
+ ("Error_OpenLogs", "Could not open the log folder.", "ログの保存フォルダーを開けませんでした。"),
  # key, en, ja
  ("App_Name", "Window Rescue", "Window Rescue"),
  ("Menu_Title", "Window Rescue", "ウインドウ救出"),

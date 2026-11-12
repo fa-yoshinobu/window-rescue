@@ -108,6 +108,13 @@ public static class RescueEngine
 
     private static WindowResult WithTimeout(WindowInfo w, Func<WindowResult> action)
     {
+        var result = RunWithTimeout(w, action);
+        Log.RescueFailed(w, result);
+        return result;
+    }
+
+    private static WindowResult RunWithTimeout(WindowInfo w, Func<WindowResult> action)
+    {
         if (w.IsHung) return new WindowResult(w.Handle, w.DisplayLabel, RescueOutcome.Failed, "Reason_NotResponding");
         var task = Task.Run(action);
         try
@@ -116,6 +123,7 @@ public static class RescueEngine
         }
         catch (AggregateException ex)
         {
+            Log.Error("Rescue exception", ex);
             return new WindowResult(w.Handle, w.DisplayLabel, RescueOutcome.Failed, "Reason_Unexpected", ex.InnerException?.Message);
         }
         return new WindowResult(w.Handle, w.DisplayLabel, RescueOutcome.Failed, "Reason_NotResponding");

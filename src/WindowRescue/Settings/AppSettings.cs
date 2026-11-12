@@ -81,8 +81,9 @@ public static class SettingsStore
             if (File.Exists(FilePath))
                 return JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(FilePath), Json) ?? new AppSettings();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Error("Load settings", ex);
             // 破損時は初期設定で起動する（既存ファイルは退避）
             try { File.Copy(FilePath, FilePath + ".broken", true); } catch (Exception) { }
         }
@@ -91,9 +92,17 @@ public static class SettingsStore
 
     public static void Save(AppSettings s)
     {
-        System.IO.Directory.CreateDirectory(Directory);
-        string tmp = FilePath + ".tmp";
-        File.WriteAllText(tmp, JsonSerializer.Serialize(s, Json));
-        File.Move(tmp, FilePath, true);
+        try
+        {
+            System.IO.Directory.CreateDirectory(Directory);
+            string tmp = FilePath + ".tmp";
+            File.WriteAllText(tmp, JsonSerializer.Serialize(s, Json));
+            File.Move(tmp, FilePath, true);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Save settings", ex);
+            throw;
+        }
     }
 }

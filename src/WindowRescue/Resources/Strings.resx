@@ -4,6 +4,11 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Error_Logged" xml:space="preserve"><value>Error details were recorded in the local log. You can open its folder from Settings.</value></data>
+  <data name="Settings_Logs" xml:space="preserve"><value>Error logs</value></data>
+  <data name="Settings_LogsHelp" xml:space="preserve"><value>Logs stay on this PC (up to two 1 MB files). Window titles are not recorded.</value></data>
+  <data name="Settings_OpenLogs" xml:space="preserve"><value>Open Log Folder</value></data>
+  <data name="Error_OpenLogs" xml:space="preserve"><value>Could not open the log folder.</value></data>
   <data name="App_Name" xml:space="preserve"><value>Window Rescue</value></data>
   <data name="Menu_Title" xml:space="preserve"><value>Window Rescue</value></data>
   <data name="Menu_RescueHere" xml:space="preserve"><value>Rescue All Windows to This Display</value></data>

@@ -80,6 +80,7 @@ public partial class SettingsWindow : Window
             PrivilegeText.Text = Loc.T(AppController.IsElevated ? "Settings_RunningElevated" : "Settings_RunningStandard");
             ElevateButton.Visibility = AppController.IsElevated ? Visibility.Collapsed : Visibility.Visible;
             SettingsPathText.Text = Loc.F("Settings_StoredAt", SettingsStore.FilePath);
+            LogPathText.Text = Log.FilePath;
             VersionText.Text = Loc.T("About_Version") + AboutWindow.AppVersion;
         }
         finally
@@ -339,6 +340,20 @@ public partial class SettingsWindow : Window
     }
 
     private void Elevate_Click(object sender, RoutedEventArgs e) => _app.RestartElevated();
+
+    private void OpenLogs_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Directory.CreateDirectory(SettingsStore.Directory);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(SettingsStore.Directory) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Open log folder", ex);
+            _app.Notify(Here, StatusKind.Error, Loc.T("Error_OpenLogs"));
+        }
+    }
 
     // ───────────── 上部の操作 ─────────────
 

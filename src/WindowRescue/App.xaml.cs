@@ -12,6 +12,43 @@ public partial class App : Application
     private SingleInstance? _instance;
     private AppController? _controller;
 
+    public App()
+    {
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+    }
+
+    private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        Log.Error("UI unhandled exception", e.Exception);
+        // 初期化途中やネイティブ障害・メモリ不足では、継続可能な状態を保証できない。
+        if (_controller == null || e.Exception is OutOfMemoryException or AccessViolationException or System.Runtime.InteropServices.SEHException) return;
+        try
+        {
+            _controller.Notify(null, UI.StatusKind.Error, Loc.T("Error_Unexpected"), Loc.T("Error_Logged"));
+            e.Handled = true;
+        }
+        catch (Exception notificationError) { Log.Error("Exception notification failed", notificationError); }
+    }
+
+    private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception exception) Log.Error("Process unhandled exception", exception);
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        Log.Error("Unobserved task exception", e.Exception);
+        e.SetObserved();
+        if (_controller == null || Dispatcher.HasShutdownStarted) return;
+        Dispatcher.BeginInvoke(() =>
+        {
+            try { _controller.Notify(null, UI.StatusKind.Error, Loc.T("Error_Unexpected"), Loc.T("Error_Logged")); }
+            catch (Exception ex) { Log.Error("Task exception notification failed", ex); }
+        });
+    }
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -45,6 +82,9 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        DispatcherUnhandledException -= OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
+        TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
         SystemParameters.StaticPropertyChanged -= OnSystemParameterChanged;
         _controller?.Dispose();
         _instance?.Dispose();
