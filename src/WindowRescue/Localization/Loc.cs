@@ -8,7 +8,7 @@ using WindowRescue.Native;
 namespace WindowRescue.Localization;
 
 /// <summary>
-/// 表示言語の切替（第19章）。英語が基底リソース、日本語は Strings.ja.resx。
+/// 表示言語の切替。英語が基底リソース、日本語は Strings.ja.resx。
 /// 言語を切り替えると Item[] の変更を通知し、開いている画面の表示も更新する。
 /// </summary>
 public sealed class Loc : INotifyPropertyChanged

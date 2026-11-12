@@ -64,7 +64,7 @@ public readonly record struct HotkeyGesture(ModifierKeys Modifiers, Key Key)
         NativeMethods.MOD_NOREPEAT;
 }
 
-/// <summary>ショートカットの操作 ID と初期割り当て（第10章）。</summary>
+/// <summary>ショートカットの操作 ID と初期割り当て。</summary>
 public static class HotkeyActions
 {
     public const string RescueForeground = "RescueForeground";

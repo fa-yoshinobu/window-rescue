@@ -96,7 +96,7 @@ public partial class App : Application
         if (e.PropertyName == nameof(SystemParameters.HighContrast)) ApplyHighContrast();
     }
 
-    /// <summary>ハイコントラスト時は OS の配色を尊重する（第17.2節）。</summary>
+    /// <summary>ハイコントラスト時は OS の配色を尊重する。</summary>
     private void ApplyHighContrast()
     {
         var keys = new[]

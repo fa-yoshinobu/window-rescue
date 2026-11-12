@@ -33,7 +33,7 @@ public static class RescueEngine
     private const uint MoveFlags = NativeMethods.SWP_NOZORDER | NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOOWNERZORDER | NativeMethods.SWP_ASYNCWINDOWPOS;
     private static readonly ConcurrentDictionary<IntPtr, (uint Process, long Start, WindowMove Move)> PendingMoves = new();
 
-    /// <summary>F-02：全対象ウインドウを target へ集める。</summary>
+    /// <summary>全対象ウインドウを target へ集める。</summary>
     public static RescueReport RescueAll(DisplayInfo target, IReadOnlyList<DisplayInfo> displays, PlacementOptions o,
         Func<WindowInfo, bool> isExcluded, CancellationToken ct) =>
         RescueAll(target, displays, o, isExcluded, ct, WindowEnumerator.Enumerate(displays));
@@ -97,7 +97,7 @@ public static class RescueEngine
         return r;
     }
 
-    /// <summary>自動補正（第7章）。フォーカスを変えない。</summary>
+    /// <summary>自動補正。フォーカスを変えない。</summary>
     public static WindowResult ApplyVerdict(WindowInfo w, Verdict verdict, DisplayInfo? home, DisplayInfo destination,
         IReadOnlyList<DisplayInfo> displays, PlacementOptions o, bool allowResize)
     {

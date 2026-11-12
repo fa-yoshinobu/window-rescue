@@ -4,7 +4,7 @@ using WindowRescue.Native;
 namespace WindowRescue.Core;
 
 /// <summary>
-/// 新規ウインドウの監視（第7章）。WinEvent で表示を受け取り、表示が落ち着いてから判定する。
+/// 新規ウインドウの監視。WinEvent で表示を受け取り、表示が落ち着いてから判定する。
 /// 最初の補正後に位置を戻された場合は、出現から 2 秒以内に 1 回だけ追加補正する。
 /// </summary>
 public sealed class WindowWatcher : IDisposable

@@ -2,7 +2,7 @@ using WindowRescue.Settings;
 
 namespace WindowRescue.Core;
 
-/// <summary>接続中の画面と、画面番号・救出先の設定を突き合わせる（第9章）。接続中の画面はすべて使用する。</summary>
+/// <summary>接続中の画面と、画面番号・救出先の設定を突き合わせる。接続中の画面はすべて使用する。</summary>
 public sealed class DisplayManager
 {
     private readonly AppSettings _settings;

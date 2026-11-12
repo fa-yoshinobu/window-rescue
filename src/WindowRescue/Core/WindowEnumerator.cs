@@ -46,7 +46,7 @@ public static class WindowEnumerator
     private static readonly uint OwnPid = (uint)Environment.ProcessId;
     private static readonly Dictionary<string, string> AppNameCache = new(StringComparer.OrdinalIgnoreCase);
 
-    /// <summary>第11章の対象ウインドウか（本アプリ自身は除く）。</summary>
+    /// <summary>救出・自動補正の対象ウインドウか（本アプリ自身は除く）。</summary>
     public static bool IsTarget(IntPtr hwnd, bool includeOwnProcess = false)
     {
         if (!NativeMethods.IsWindow(hwnd) || !NativeMethods.IsWindowVisible(hwnd)) return false;

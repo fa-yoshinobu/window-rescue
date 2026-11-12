@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--
-      デジタル庁デザインシステム（DADS）を基準とした共通スタイル（第17章）。
+      デジタル庁デザインシステム（DADS）を基準とした共通スタイル。
       色の値は @digital-go-jp/design-tokens 2.1.0 の primitive / semantic トークン。
       ハイコントラスト時は App.ApplyHighContrast がブラシを OS の色へ差し替える。
     -->

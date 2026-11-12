@@ -5,7 +5,7 @@ namespace WindowRescue.Core;
 
 public enum ContextMenuState { NotRegistered, Registered, NeedsRepair }
 
-/// <summary>デスクトップ右クリックメニュー（従来形式）の登録・解除（第5.3節）。現在のユーザーだけに登録する。</summary>
+/// <summary>デスクトップ右クリックメニュー（従来形式）の登録・解除。現在のユーザーだけに登録する。</summary>
 public static class ContextMenuRegistrar
 {
     public const string ParentPath = @"Software\Classes\DesktopBackground\Shell";

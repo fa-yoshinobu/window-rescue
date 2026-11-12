@@ -76,7 +76,7 @@ public sealed class AppController : IDisposable
         return (p.X, p.Y);
     }
 
-    /// <summary>カーソル位置の接続中画面。表示できない場合は、救出先・使用中画面・接続中画面の順に代替する（第5.1節）。</summary>
+    /// <summary>カーソル位置の接続中画面。表示できない場合は、救出先・使用中画面・接続中画面の順に代替する。</summary>
     public DisplayInfo UiDisplayAt((int x, int y) p)
     {
         var fresh = MonitorService.GetDisplays();
@@ -185,7 +185,7 @@ public sealed class AppController : IDisposable
 
     // ───────────── 救出 ─────────────
 
-    /// <summary>救出処理を 1 つずつ実行する。実行中の新しい要求は最新のものだけを残す（第13章）。</summary>
+    /// <summary>救出処理を 1 つずつ実行する。実行中の新しい要求は最新のものだけを残す。</summary>
     private async void RunExclusive(Func<Task> work)
     {
         if (_busy)
@@ -220,7 +220,7 @@ public sealed class AppController : IDisposable
 
     private bool IsExcludedForManual(WindowInfo w) => false;
 
-    /// <summary>F-02：target へ全ウインドウを救出する。</summary>
+    /// <summary>target へ全ウインドウを救出する。</summary>
     public void RescueAllTo(DisplayInfo target, DisplayInfo notifyOn)
     {
         RunExclusive(async () =>
@@ -309,7 +309,7 @@ public sealed class AppController : IDisposable
         RaiseStateChanged();
     }
 
-    /// <summary>画面番号を指定した一括救出。未接続の画面では実行しない（第9章）。</summary>
+    /// <summary>画面番号を指定した一括救出。未接続の画面では実行しない。</summary>
     public void RescueAllToNumber(int n, (int x, int y) p)
     {
         var ui = UiDisplayAt(p);
@@ -325,7 +325,7 @@ public sealed class AppController : IDisposable
         return target;
     }
 
-    /// <summary>F-01：選択中（前面）の窓を画面 n へ移す。</summary>
+    /// <summary>選択中（前面）の窓を画面 n へ移す。</summary>
     public void RescueForegroundToNumber(int n, (int x, int y) p)
     {
         var ui = UiDisplayAt(p);
@@ -491,7 +491,7 @@ public sealed class AppController : IDisposable
         _tray.RebuildMenu();
     }
 
-    /// <summary>使用画面・接続構成の変更後、監視中なら既存の窓を 1 回点検する（第9章）。</summary>
+    /// <summary>使用画面・接続構成の変更後、監視中なら既存の窓を 1 回点検する。</summary>
     public void InspectExistingWindows()
     {
         if (Settings.Mode == MonitorMode.Off) return;
