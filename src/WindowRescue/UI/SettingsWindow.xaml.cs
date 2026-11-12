@@ -260,6 +260,12 @@ public partial class SettingsWindow : Window
                     break;
             }
             stack.Children.Add(statusText);
+            if (KeyboardLayout.ConflictsWithAltGr(gesture, _app.HasAltGr))
+            {
+                var warning = new TextBlock { Text = Loc.T("Shortcut_AltGrWarning"), TextWrapping = TextWrapping.Wrap, Style = (Style)FindResource("Help") };
+                warning.SetResourceReference(TextBlock.ForegroundProperty, "Brush.Warning");
+                stack.Children.Add(warning);
+            }
             Grid.SetRow(stack, row);
             Grid.SetColumn(stack, 1);
             ShortcutGrid.Children.Add(stack);

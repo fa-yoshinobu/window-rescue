@@ -38,7 +38,7 @@ public class HotkeyTests
     {
         var ids = HotkeyActions.All([1, 2]);
         Assert.Contains("RescueAll:3", ids);
-        var gestures = ids.Select(HotkeyActions.Default).Where(g => g.Length > 0).ToList();
+        var gestures = ids.Select(id => HotkeyActions.Default(id)).Where(g => g.Length > 0).ToList();
         Assert.Equal(gestures.Count, gestures.Distinct().Count());
         Assert.Equal(8, gestures.Count);
     }

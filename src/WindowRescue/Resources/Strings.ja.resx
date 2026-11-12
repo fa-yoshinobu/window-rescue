@@ -4,6 +4,7 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Shortcut_AltGrWarning" xml:space="preserve"><value>この配列ではAltGrによる文字入力を妨げる可能性があります。</value></data>
   <data name="Settings_Displays" xml:space="preserve"><value>画面番号</value></data>
   <data name="Settings_DisplaysHelp" xml:space="preserve"><value>使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。</value></data>
   <data name="Settings_DisplayEntry" xml:space="preserve"><value>画面 {0}：{1} — {2}</value></data>

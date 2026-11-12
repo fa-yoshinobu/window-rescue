@@ -96,20 +96,25 @@ public static class HotkeyActions
         return list;
     }
 
-    public static string Default(string id)
+    public static string Default(string id, bool hasAltGr = false)
     {
+        string gesture;
         if (TryParseDisplayAction(id, out var action, out int n))
         {
             if (n > 9) return "";
-            return action == RescueForeground ? $"Ctrl+Alt+{n}" : $"Ctrl+Alt+Shift+{n}";
+            gesture = action == RescueForeground ? $"Ctrl+Alt+{n}" : $"Ctrl+Alt+Shift+{n}";
         }
-        return id switch
+        else gesture = id switch
         {
             OpenList => "Ctrl+Alt+Space",
             RescueHere => "Ctrl+Alt+Home",
             _ => "",
         };
+        return KeyboardLayout.ConflictsWithAltGr(gesture, hasAltGr) ? "" : gesture;
     }
+
+    internal static string Resolve(string action, IReadOnlyDictionary<string, string> configured, bool hasAltGr) =>
+        configured.TryGetValue(action, out var gesture) ? gesture : Default(action, hasAltGr);
 }
 
 public enum HotkeyStatus { Unassigned, Registered, Failed, Invalid, Duplicate }

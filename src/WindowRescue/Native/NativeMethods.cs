@@ -61,6 +61,12 @@ internal struct DISPLAY_DEVICE
 
 internal static class NativeMethods
 {
+    [DllImport("user32.dll")]
+    public static extern IntPtr GetKeyboardLayout(uint threadId);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, EntryPoint = "VkKeyScanExW")]
+    public static extern short VkKeyScanEx(char character, IntPtr layout);
+
     public const int GWL_STYLE = -16;
     public const int GWL_EXSTYLE = -20;
 

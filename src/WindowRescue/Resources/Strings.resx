@@ -4,6 +4,7 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Shortcut_AltGrWarning" xml:space="preserve"><value>This shortcut can block AltGr character input on the current keyboard layout.</value></data>
   <data name="Settings_Displays" xml:space="preserve"><value>Display numbers</value></data>
   <data name="Settings_DisplaysHelp" xml:space="preserve"><value>Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.</value></data>
   <data name="Settings_DisplayEntry" xml:space="preserve"><value>Display {0}: {1} — {2}</value></data>

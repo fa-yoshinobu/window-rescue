@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using WindowRescue.Core;
@@ -51,6 +52,8 @@ public sealed class AppController : IDisposable
         _hotkeys = new HotkeyService();
         _hotkeys.Pressed += OnHotkey;
         ApplyHotkeys();
+
+        InputLanguageManager.Current.InputLanguageChanged += OnInputLanguageChanged;
 
         _watcher = new WindowWatcher(dispatcher, CheckNewWindowAsync);
         ApplyMode();
@@ -166,6 +169,7 @@ public sealed class AppController : IDisposable
 
     public void OpenSettings((int x, int y) p)
     {
+        ApplyHotkeys();
         _settingsWindow ??= CreateWindow(() => new SettingsWindow(this), () => _settingsWindow = null);
         WindowPositioner.ShowOn(_settingsWindow, UiDisplayAt(p));
         _settingsWindow.Reload();
@@ -394,11 +398,15 @@ public sealed class AppController : IDisposable
         RaiseStateChanged();
     }
 
-    public string GestureFor(string action) =>
-        Settings.Hotkeys.TryGetValue(action, out var g) ? g : HotkeyActions.Default(action);
+    public bool HasAltGr { get; private set; }
+
+    public string GestureFor(string action) => HotkeyActions.Resolve(action, Settings.Hotkeys, HasAltGr);
+
+    private void OnInputLanguageChanged(object sender, InputLanguageEventArgs e) => ApplyHotkeys();
 
     public void ApplyHotkeys()
     {
+        HasAltGr = KeyboardLayout.CurrentHasAltGr();
         _hotkeys.Apply(HotkeyActionIds, GestureFor);
         HotkeysChanged?.Invoke();
     }
@@ -592,6 +600,7 @@ public sealed class AppController : IDisposable
 
     public void Dispose()
     {
+        InputLanguageManager.Current.InputLanguageChanged -= OnInputLanguageChanged;
         SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
         Loc.Instance.LanguageChanged -= OnLanguageChanged;
         _watcher.Dispose();

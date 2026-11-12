@@ -2,6 +2,7 @@ import sys
 from xml.sax.saxutils import escape
 
 S = [
+ ("Shortcut_AltGrWarning", "This shortcut can block AltGr character input on the current keyboard layout.", "この配列ではAltGrによる文字入力を妨げる可能性があります。"),
  ("Settings_Displays", "Display numbers", "画面番号"),
  ("Settings_DisplaysHelp", "Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.", "使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。"),
  ("Settings_DisplayEntry", "Display {0}: {1} — {2}", "画面 {0}：{1} — {2}"),
