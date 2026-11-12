@@ -11,6 +11,7 @@
                   Background="{DynamicResource Brush.Surface}">
         <StackPanel Margin="32,24,32,32" MaxWidth="900">
             <TextBlock Style="{StaticResource H1}" Text="{l:T Settings_Heading}" />
+            <ui:StatusBanner x:Name="ReadOnlyBanner" />
 
             <!-- よく使う救出操作（上部） -->
             <Border Style="{StaticResource Card}">

@@ -65,6 +65,8 @@ git push origin v0.2.0
 
 ## 構成
 
+設定形式の移行は `SettingsStore.MigrateAndValidate` にまとめます。現在の公開形式はVersion 1だけです。形式を変更する場合は旧版ごとの移行をここへ追加し、移行後に設定画面と同じ数値範囲で検証します。未知の新しいVersionは読み替えず、元ファイルを保存禁止にして今回だけ既定値で起動します。起動時と設定画面でその旨を案内します。既知形式の破損は従来どおり `.broken` へ退避します。
+
 | パス | 内容 |
 | --- | --- |
 | `src/WindowRescue/Core` | 画面情報・窓の列挙・位置計算（`PlacementCalculator` / `WindowJudge`）・救出（`RescueEngine`）・新規窓の監視・ショートカット・右クリックメニュー登録・多重起動防止 |

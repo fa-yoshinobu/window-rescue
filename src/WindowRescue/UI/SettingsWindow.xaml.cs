@@ -44,6 +44,9 @@ public partial class SettingsWindow : Window
         try
         {
             var s = _app.Settings;
+            if (s.IsReadOnly)
+                ReadOnlyBanner.Show(StatusKind.Warning, Loc.T("Settings_FutureVersionTitle"), Loc.T("Settings_FutureVersionHelp"));
+            else ReadOnlyBanner.Hide();
 
             ModeOff.IsChecked = s.Mode == MonitorMode.Off;
             ModeAuto.IsChecked = s.Mode == MonitorMode.AutoRescue;
@@ -112,8 +115,8 @@ public partial class SettingsWindow : Window
     {
         if (_updating) return;
         var s = _app.Settings;
-        bool ok = TryRange(TinyW.Text, 20, 2000, out int tw) & TryRange(TinyH.Text, 20, 2000, out int th)
-                & TryRange(StdW.Text, 200, 8000, out int sw) & TryRange(StdH.Text, 150, 8000, out int sh);
+        bool ok = SettingRanges.TinyWidth.TryParse(TinyW.Text, out int tw) & SettingRanges.TinyHeight.TryParse(TinyH.Text, out int th)
+                & SettingRanges.StandardWidth.TryParse(StdW.Text, out int sw) & SettingRanges.StandardHeight.TryParse(StdH.Text, out int sh);
         if (!ok)
         {
             NumbersBanner.Show(StatusKind.Error, Loc.T("Error_InvalidNumber"), Loc.T("Error_InvalidNumberHint"));
@@ -124,9 +127,6 @@ public partial class SettingsWindow : Window
         s.TinyWidthDip = tw; s.TinyHeightDip = th; s.StandardWidthDip = sw; s.StandardHeightDip = sh;
         _app.Save();
     }
-
-    private static bool TryRange(string text, int min, int max, out int value) =>
-        int.TryParse(text.Trim(), out value) && value >= min && value <= max;
 
     private void BuildExclusions()
     {

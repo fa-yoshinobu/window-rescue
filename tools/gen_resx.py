@@ -191,6 +191,8 @@ S = [
  ("Settings_RunningStandard", "Running with standard permissions. Windows of apps running as administrator may not be movable.", "標準の権限で動作しています。管理者権限で動くアプリの窓は移動できない場合があります。"),
  ("Settings_RunningElevated", "Running as administrator.", "管理者権限で動作しています。"),
  ("Settings_StoredAt", "Settings are stored only on this PC: {0}", "設定はこの PC 内だけに保存します：{0}"),
+ ("Settings_FutureVersionTitle", "Settings were saved by a newer version", "新しいバージョンで保存された設定です"),
+ ("Settings_FutureVersionHelp", "Using defaults for this session. Changes will not be saved, to preserve the existing file. Use the newer app to load your settings.", "元の設定ファイルを保護するため、今回は既定値で動作し、変更を保存しません。設定を読み込むには新しい版のアプリを使用してください。"),
 ]
 
 HEADER = '''<?xml version="1.0" encoding="utf-8"?>

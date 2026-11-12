@@ -178,4 +178,6 @@
   <data name="Settings_RunningStandard" xml:space="preserve"><value>Running with standard permissions. Windows of apps running as administrator may not be movable.</value></data>
   <data name="Settings_RunningElevated" xml:space="preserve"><value>Running as administrator.</value></data>
   <data name="Settings_StoredAt" xml:space="preserve"><value>Settings are stored only on this PC: {0}</value></data>
+  <data name="Settings_FutureVersionTitle" xml:space="preserve"><value>Settings were saved by a newer version</value></data>
+  <data name="Settings_FutureVersionHelp" xml:space="preserve"><value>Using defaults for this session. Changes will not be saved, to preserve the existing file. Use the newer app to load your settings.</value></data>
 </root>

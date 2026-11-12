@@ -178,4 +178,6 @@
   <data name="Settings_RunningStandard" xml:space="preserve"><value>標準の権限で動作しています。管理者権限で動くアプリの窓は移動できない場合があります。</value></data>
   <data name="Settings_RunningElevated" xml:space="preserve"><value>管理者権限で動作しています。</value></data>
   <data name="Settings_StoredAt" xml:space="preserve"><value>設定はこの PC 内だけに保存します：{0}</value></data>
+  <data name="Settings_FutureVersionTitle" xml:space="preserve"><value>新しいバージョンで保存された設定です</value></data>
+  <data name="Settings_FutureVersionHelp" xml:space="preserve"><value>元の設定ファイルを保護するため、今回は既定値で動作し、変更を保存しません。設定を読み込むには新しい版のアプリを使用してください。</value></data>
 </root>

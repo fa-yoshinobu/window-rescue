@@ -66,6 +66,9 @@ public sealed class AppController : IDisposable
         SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
 
         Loc.Instance.LanguageChanged += OnLanguageChanged;
+        RepairContextMenuOnStartup();
+        if (Settings.IsReadOnly)
+            Notify(null, StatusKind.Warning, Loc.T("Settings_FutureVersionTitle"), Loc.T("Settings_FutureVersionHelp"));
     }
 
     // ───────────── 共通 ─────────────
@@ -218,8 +221,6 @@ public sealed class AppController : IDisposable
         }
     }
 
-    private bool IsExcludedForManual(WindowInfo w) => false;
-
     /// <summary>target へ全ウインドウを救出する。</summary>
     public void RescueAllTo(DisplayInfo target, DisplayInfo notifyOn)
     {
@@ -227,7 +228,8 @@ public sealed class AppController : IDisposable
         {
             var displays = Displays.Connected;
             var options = Settings.ToPlacementOptions();
-            var report = await Task.Run(() => RescueEngine.RescueAll(target, displays, options, IsExcludedForManual, CancellationToken.None));
+            // 手動の一括救出は自動補正の除外設定に関係なく全対象を含める。
+            var report = await Task.Run(() => RescueEngine.RescueAll(target, displays, options, _ => false, CancellationToken.None));
             ShowReport(report, notifyOn, Loc.F("Result_RescuedTo", Displays.NumberOf(target)));
             _list?.Reload();
         });
@@ -439,7 +441,7 @@ public sealed class AppController : IDisposable
         else _watcher.Start();
     }
 
-    private async Task<PixelRect?> CheckNewWindowAsync(IntPtr hwnd, bool recheck)
+    private async Task<PixelRect?> CheckNewWindowAsync(IntPtr hwnd)
     {
         // 手動要求を優先し、自動補正同士も含めて同時に窓を動かさない。
         if (Settings.Mode == MonitorMode.Off || _busy || !_rescueGate.Wait(0)) return null;
@@ -505,6 +507,20 @@ public sealed class AppController : IDisposable
     // ───────────── 右クリックメニュー・言語・起動 ─────────────
 
     public ContextMenuState ContextMenuState => ContextMenuRegistrar.GetState(ExePath);
+
+    private void RepairContextMenuOnStartup()
+    {
+        if (!Settings.ContextMenuWanted) return;
+        try
+        {
+            if (ContextMenuState == ContextMenuState.NeedsRepair) RegisterContextMenu();
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Check context menu on startup", ex);
+            LastContextMenuError = ex.Message;
+        }
+    }
 
     public bool RegisterContextMenu()
     {

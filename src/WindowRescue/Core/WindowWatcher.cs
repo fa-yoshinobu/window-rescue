@@ -23,13 +23,13 @@ public sealed class WindowWatcher : IDisposable
     }
 
     private readonly Dispatcher _dispatcher;
-    private readonly Func<IntPtr, bool, Task<PixelRect?>> _check; // (hwnd, isRecheck) → 補正後の矩形（補正しなければ null）
+    private readonly Func<IntPtr, Task<PixelRect?>> _check; // hwnd → 補正後の矩形（補正しなければ null）
     private readonly NativeMethods.WinEventDelegate _callback; // GC されないよう保持
     private readonly Dictionary<IntPtr, Tracked> _tracked = [];
     private IntPtr _showHook, _moveHook, _uncloakHook;
     private WindowAppearances? _appearances;
 
-    public WindowWatcher(Dispatcher dispatcher, Func<IntPtr, bool, Task<PixelRect?>> check)
+    public WindowWatcher(Dispatcher dispatcher, Func<IntPtr, Task<PixelRect?>> check)
     {
         _dispatcher = dispatcher;
         _check = check;
@@ -116,7 +116,7 @@ public sealed class WindowWatcher : IDisposable
         }
 
         PixelRect? corrected;
-        try { corrected = await _check(t.Handle, recheck); }
+        try { corrected = await _check(t.Handle); }
         catch (Exception ex) { Log.Error("Automatic window correction", ex); corrected = null; }
         if (!_tracked.TryGetValue(t.Handle, out current) || !ReferenceEquals(current, t)) return;
         if (t.UserMoved) { _tracked.Remove(t.Handle); return; }
