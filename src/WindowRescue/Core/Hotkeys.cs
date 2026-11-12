@@ -84,13 +84,13 @@ public static class HotkeyActions
         return int.TryParse(id[(i + 1)..], out number);
     }
 
-    /// <summary>画面数に応じた操作 ID の一覧（最低 3 画面分）。</summary>
-    public static List<string> All(int displayCount)
+    /// <summary>接続中の画面番号と、常に表示する 1〜3 の操作 ID。</summary>
+    public static List<string> All(IEnumerable<int> connectedNumbers)
     {
-        int n = Math.Max(3, displayCount);
+        var numbers = connectedNumbers.Concat([1, 2, 3]).Where(n => n > 0).Distinct().Order().ToList();
         var list = new List<string>();
-        for (int i = 1; i <= n; i++) list.Add(ForDisplay(RescueForeground, i));
-        for (int i = 1; i <= n; i++) list.Add(ForDisplay(RescueAll, i));
+        foreach (int number in numbers) list.Add(ForDisplay(RescueForeground, number));
+        foreach (int number in numbers) list.Add(ForDisplay(RescueAll, number));
         list.Add(OpenList);
         list.Add(RescueHere);
         return list;

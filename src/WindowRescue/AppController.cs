@@ -375,7 +375,24 @@ public sealed class AppController : IDisposable
 
     public HotkeyService Hotkeys => _hotkeys;
 
-    public List<string> HotkeyActionIds => HotkeyActions.All(Displays.Connected.Count);
+    public List<string> HotkeyActionIds => HotkeyActions.All(Displays.Connected.Select(Displays.NumberOf));
+
+    public bool SetDisplayNumber(string id, int number)
+    {
+        if (!Displays.SetNumber(id, number)) return false;
+        ApplyHotkeys();
+        _tray.RebuildMenu();
+        RaiseStateChanged();
+        return true;
+    }
+
+    public void ForgetDisplay(string id)
+    {
+        if (!Displays.ForgetDisconnected(id)) return;
+        ApplyHotkeys();
+        _tray.RebuildMenu();
+        RaiseStateChanged();
+    }
 
     public string GestureFor(string action) =>
         Settings.Hotkeys.TryGetValue(action, out var g) ? g : HotkeyActions.Default(action);

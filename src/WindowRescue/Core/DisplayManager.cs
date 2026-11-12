@@ -57,6 +57,22 @@ public sealed class DisplayManager
 
     public DisplayInfo? ById(string? id) => id == null ? null : Connected.FirstOrDefault(d => d.Id == id);
 
+    public bool SetNumber(string id, int number)
+    {
+        var known = _settings.Displays.FirstOrDefault(d => d.Id == id);
+        if (known == null || number < 1) return false;
+        var other = _settings.Displays.FirstOrDefault(d => d.Number == number);
+        if (other != null) other.Number = known.Number;
+        known.Number = number;
+        return true;
+    }
+
+    public bool ForgetDisconnected(string id)
+    {
+        if (ById(id) != null) return false;
+        return _settings.Displays.RemoveAll(d => d.Id == id) > 0;
+    }
+
     /// <summary>救出先。指定の画面が接続されていなければ、ポインターのある画面を使う。</summary>
     public DisplayInfo? GetDestination((int x, int y) cursor) =>
         ById(_settings.DestinationId) ?? PickFallbackDestination(cursor);

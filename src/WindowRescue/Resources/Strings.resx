@@ -4,6 +4,14 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Settings_Displays" xml:space="preserve"><value>Display numbers</value></data>
+  <data name="Settings_DisplaysHelp" xml:space="preserve"><value>Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.</value></data>
+  <data name="Settings_DisplayEntry" xml:space="preserve"><value>Display {0}: {1} — {2}</value></data>
+  <data name="Settings_DisplayNumber" xml:space="preserve"><value>Number for display {0}: {1}</value></data>
+  <data name="Settings_ChangeNumber" xml:space="preserve"><value>Change Number</value></data>
+  <data name="Display_Connected" xml:space="preserve"><value>Connected</value></data>
+  <data name="Display_Disconnected" xml:space="preserve"><value>Disconnected</value></data>
+  <data name="Error_DisplayNumber" xml:space="preserve"><value>Enter a positive whole number (up to 2147483647).</value></data>
   <data name="Error_Logged" xml:space="preserve"><value>Error details were recorded in the local log. You can open its folder from Settings.</value></data>
   <data name="Settings_Logs" xml:space="preserve"><value>Error logs</value></data>
   <data name="Settings_LogsHelp" xml:space="preserve"><value>Logs stay on this PC (up to two 1 MB files). Window titles are not recorded.</value></data>

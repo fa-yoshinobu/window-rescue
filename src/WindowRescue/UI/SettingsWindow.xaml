@@ -97,6 +97,15 @@
             <!-- ショートカット -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Displays}" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_DisplaysHelp}" />
+                    <StackPanel x:Name="DisplayRows" Margin="0,8,0,0" />
+                    <ui:StatusBanner x:Name="DisplayNumbersBanner" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
                     <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Shortcuts}" />
                     <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_ShortcutsHelp}" />
                     <Grid x:Name="ShortcutGrid" Margin="0,8,0,0">

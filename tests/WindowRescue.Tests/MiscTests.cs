@@ -36,7 +36,7 @@ public class HotkeyTests
     [Fact]
     public void DefaultsCoverThreeDisplaysAndAreUnique()
     {
-        var ids = HotkeyActions.All(2);
+        var ids = HotkeyActions.All([1, 2]);
         Assert.Contains("RescueAll:3", ids);
         var gestures = ids.Select(HotkeyActions.Default).Where(g => g.Length > 0).ToList();
         Assert.Equal(gestures.Count, gestures.Distinct().Count());
@@ -46,9 +46,24 @@ public class HotkeyTests
     [Fact]
     public void FourthDisplayGetsItsOwnActions()
     {
-        var ids = HotkeyActions.All(4);
+        var ids = HotkeyActions.All([1, 2, 3, 4]);
         Assert.Contains("RescueForeground:4", ids);
         Assert.Equal("Ctrl+Alt+Shift+4", HotkeyActions.Default("RescueAll:4"));
+    }
+
+    [Fact]
+    public void SparseConnectedNumbersIncludeBothActionsAndKeepFirstThree()
+    {
+        var ids = HotkeyActions.All([5, 4, 5, 10]);
+        foreach (int number in new[] { 1, 2, 3, 4, 5, 10 })
+        {
+            Assert.Contains($"RescueForeground:{number}", ids);
+            Assert.Contains($"RescueAll:{number}", ids);
+        }
+        Assert.Equal(14, ids.Count);
+        Assert.DoesNotContain("RescueAll:6", ids);
+        Assert.Equal("", HotkeyActions.Default("RescueForeground:10"));
+        Assert.Equal("", HotkeyActions.Default("RescueAll:10"));
     }
 }
 
@@ -121,6 +136,55 @@ public class DisplayManagerTests
         dm.Refresh([D("a", 0, true)], (10, 10));
         Assert.False(dm.SetDestination("zzz"));
         Assert.Equal("a", dm.GetDestination((10, 10))!.Id);
+    }
+
+    [Fact]
+    public void ExistingSettingsWithThreeDisconnectedDisplaysExposeConnectedFourAndFive()
+    {
+        var s = System.Text.Json.JsonSerializer.Deserialize<AppSettings>("""
+            {"Version":1,"Displays":[{"Id":"old1","Number":1},{"Id":"old2","Number":2},{"Id":"old3","Number":3}]}
+            """)!;
+        var dm = new DisplayManager(s);
+        dm.Refresh([D("a", 0), D("b", 1920)], (10, 10));
+        var ids = HotkeyActions.All(dm.Connected.Select(dm.NumberOf));
+        Assert.Contains("RescueForeground:4", ids);
+        Assert.Contains("RescueForeground:5", ids);
+        Assert.Contains("RescueAll:4", ids);
+        Assert.Contains("RescueAll:5", ids);
+        Assert.Equal(5, s.Displays.Count);
+    }
+
+    [Fact]
+    public void SwappingNumbersKeepsDestinationAndNumberBasedHotkeys()
+    {
+        var s = new AppSettings { Hotkeys = new() { ["RescueAll:1"] = "Ctrl+Shift+F1" } };
+        var dm = new DisplayManager(s);
+        dm.Refresh([D("a", 0), D("b", 1920)], (10, 10));
+        Assert.True(dm.SetNumber("a", 2));
+        Assert.Equal("b", dm.ByNumber(1)!.Id);
+        Assert.Equal("a", dm.ByNumber(2)!.Id);
+        Assert.Equal("a", dm.GetDestination((10, 10))!.Id);
+        Assert.Equal("Ctrl+Shift+F1", s.Hotkeys["RescueAll:1"]);
+        Assert.True(dm.SetNumber("a", 10));
+        Assert.Null(dm.ByNumber(2));
+        Assert.Equal("a", dm.ByNumber(10)!.Id);
+        Assert.False(dm.SetNumber("a", 0));
+        Assert.False(dm.SetNumber("unknown", 1));
+        Assert.Equal(10, dm.NumberOf(dm.ById("a")!));
+    }
+
+    [Fact]
+    public void OnlyDisconnectedDisplayCanBeDeletedAndItsNumberIsReused()
+    {
+        var s = new AppSettings();
+        var dm = new DisplayManager(s);
+        dm.Refresh([D("a", 0), D("b", 1920)], (10, 10));
+        Assert.False(dm.ForgetDisconnected("a"));
+        dm.Refresh([D("b", 1920)], (2000, 10));
+        Assert.True(dm.ForgetDisconnected("a"));
+        dm.Refresh([D("b", 1920), D("c", 3840)], (2000, 10));
+        Assert.Equal("c", dm.ByNumber(1)!.Id);
+        Assert.Equal("b", dm.ByNumber(2)!.Id);
     }
 }
 

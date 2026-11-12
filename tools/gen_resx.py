@@ -2,6 +2,14 @@ import sys
 from xml.sax.saxutils import escape
 
 S = [
+ ("Settings_Displays", "Display numbers", "画面番号"),
+ ("Settings_DisplaysHelp", "Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.", "使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。"),
+ ("Settings_DisplayEntry", "Display {0}: {1} — {2}", "画面 {0}：{1} — {2}"),
+ ("Settings_DisplayNumber", "Number for display {0}: {1}", "画面 {0}（{1}）の番号"),
+ ("Settings_ChangeNumber", "Change Number", "番号を変更"),
+ ("Display_Connected", "Connected", "接続中"),
+ ("Display_Disconnected", "Disconnected", "未接続"),
+ ("Error_DisplayNumber", "Enter a positive whole number (up to 2147483647).", "1〜2147483647の整数を入力してください。"),
  ("Error_Logged", "Error details were recorded in the local log. You can open its folder from Settings.", "エラーの詳細をローカルのログに記録しました。設定から保存フォルダーを開けます。"),
  ("Settings_Logs", "Error logs", "エラーログ"),
  ("Settings_LogsHelp", "Logs stay on this PC (up to two 1 MB files). Window titles are not recorded.", "ログはこの PC 内だけに保存します（最大 1 MB × 2 世代）。窓のタイトルは記録しません。"),

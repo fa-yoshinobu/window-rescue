@@ -63,6 +63,7 @@ public partial class SettingsWindow : Window
             ExclusionScope.DisplayMemberPath = nameof(Choice.Label);
             ExclusionScope.SelectedIndex = 0;
             BuildExclusions();
+            BuildDisplays();
             BuildShortcuts();
             UpdateContextMenuState();
 
@@ -165,6 +166,43 @@ public partial class SettingsWindow : Window
         else _app.Settings.Exclusions.Add(new AppExclusion { ProcessName = name, Scope = scope });
         ExclusionProcess.Text = "";
         _app.RaiseStateChanged();
+    }
+
+    private void BuildDisplays()
+    {
+        DisplayRows.Children.Clear();
+        foreach (var display in _app.Settings.Displays.OrderBy(d => d.Number))
+        {
+            bool connected = _app.Displays.ById(display.Id) != null;
+            string label = Loc.F("Settings_DisplayEntry", display.Number, display.Name,
+                Loc.T(connected ? "Display_Connected" : "Display_Disconnected"));
+            var row = new StackPanel { Margin = new Thickness(0, 4, 0, 12) };
+            row.Children.Add(new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap });
+            var controls = new WrapPanel();
+            var number = new TextBox { Text = display.Number.ToString(), Width = 80, Margin = new Thickness(0, 4, 12, 4) };
+            AutomationProperties.SetName(number, Loc.F("Settings_DisplayNumber", display.Number, display.Name));
+            controls.Children.Add(number);
+            var change = new Button { Content = Loc.T("Settings_ChangeNumber"), Margin = new Thickness(0, 4, 12, 4) };
+            AutomationProperties.SetName(change, Loc.T("Settings_ChangeNumber") + " — " + label);
+            change.Click += (_, _) =>
+            {
+                if (!int.TryParse(number.Text, out int value) || value < 1)
+                {
+                    DisplayNumbersBanner.Show(StatusKind.Error, Loc.T("Error_DisplayNumber"));
+                    number.Focus();
+                    return;
+                }
+                DisplayNumbersBanner.Hide();
+                _app.SetDisplayNumber(display.Id, value);
+            };
+            controls.Children.Add(change);
+            var remove = new Button { Content = Loc.T("Common_Remove"), IsEnabled = !connected, Margin = new Thickness(0, 4, 0, 4) };
+            AutomationProperties.SetName(remove, Loc.T("Common_Remove") + " — " + label);
+            remove.Click += (_, _) => _app.ForgetDisplay(display.Id);
+            controls.Children.Add(remove);
+            row.Children.Add(controls);
+            DisplayRows.Children.Add(row);
+        }
     }
 
     // ───────────── ショートカット ─────────────

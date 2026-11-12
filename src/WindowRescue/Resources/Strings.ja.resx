@@ -4,6 +4,14 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Settings_Displays" xml:space="preserve"><value>画面番号</value></data>
+  <data name="Settings_DisplaysHelp" xml:space="preserve"><value>使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。</value></data>
+  <data name="Settings_DisplayEntry" xml:space="preserve"><value>画面 {0}：{1} — {2}</value></data>
+  <data name="Settings_DisplayNumber" xml:space="preserve"><value>画面 {0}（{1}）の番号</value></data>
+  <data name="Settings_ChangeNumber" xml:space="preserve"><value>番号を変更</value></data>
+  <data name="Display_Connected" xml:space="preserve"><value>接続中</value></data>
+  <data name="Display_Disconnected" xml:space="preserve"><value>未接続</value></data>
+  <data name="Error_DisplayNumber" xml:space="preserve"><value>1〜2147483647の整数を入力してください。</value></data>
   <data name="Error_Logged" xml:space="preserve"><value>エラーの詳細をローカルのログに記録しました。設定から保存フォルダーを開けます。</value></data>
   <data name="Settings_Logs" xml:space="preserve"><value>エラーログ</value></data>
   <data name="Settings_LogsHelp" xml:space="preserve"><value>ログはこの PC 内だけに保存します（最大 1 MB × 2 世代）。窓のタイトルは記録しません。</value></data>
