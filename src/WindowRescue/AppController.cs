@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using WindowRescue.Core;
@@ -28,6 +29,7 @@ public sealed class AppController : IDisposable
 
     private bool _busy;
     private Func<Task>? _pending;
+    private readonly SemaphoreSlim _rescueGate = new(1, 1);
 
     public AppSettings Settings { get; }
     public DisplayManager Displays { get; }
@@ -52,6 +54,8 @@ public sealed class AppController : IDisposable
         _hotkeys.Pressed += OnHotkey;
         ApplyHotkeys();
 
+        InputLanguageManager.Current.InputLanguageChanged += OnInputLanguageChanged;
+
         _watcher = new WindowWatcher(dispatcher, CheckNewWindowAsync);
         ApplyMode();
 
@@ -60,8 +64,12 @@ public sealed class AppController : IDisposable
         _displayChangeTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(800), DispatcherPriority.Background, (_, _) => OnDisplaysSettled(), dispatcher);
         _displayChangeTimer.Stop();
         SystemEvents.DisplaySettingsChanged += OnDisplaySettingsChanged;
+        SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
 
         Loc.Instance.LanguageChanged += OnLanguageChanged;
+        RepairContextMenuOnStartup();
+        if (Settings.IsReadOnly)
+            Notify(null, StatusKind.Warning, Loc.T("Settings_FutureVersionTitle"), Loc.T("Settings_FutureVersionHelp"));
     }
 
     // ───────────── 共通 ─────────────
@@ -72,15 +80,15 @@ public sealed class AppController : IDisposable
         return (p.X, p.Y);
     }
 
-    /// <summary>カーソル位置の接続中画面。表示できない場合は、救出先・使用中画面・接続中画面の順に代替する（第5.1節）。</summary>
+    /// <summary>カーソル位置の接続中画面。表示できない場合は、救出先・使用中画面・接続中画面の順に代替する。</summary>
     public DisplayInfo UiDisplayAt((int x, int y) p)
     {
-        var fresh = MonitorService.GetDisplays();
-        return MonitorService.FromPoint(fresh, p.x, p.y)
-            ?? MonitorService.FromPoint(fresh, Cursor().x, Cursor().y)
+        var connected = Displays.Connected;
+        return MonitorService.FromPoint(connected, p.x, p.y)
+            ?? MonitorService.FromPoint(connected, Cursor().x, Cursor().y)
             ?? Displays.GetDestination(p)
             ?? Displays.Connected.FirstOrDefault()
-            ?? fresh.First();
+            ?? connected.First();
     }
 
     public void Save()
@@ -166,6 +174,7 @@ public sealed class AppController : IDisposable
 
     public void OpenSettings((int x, int y) p)
     {
+        ApplyHotkeys();
         _settingsWindow ??= CreateWindow(() => new SettingsWindow(this), () => _settingsWindow = null);
         WindowPositioner.ShowOn(_settingsWindow, UiDisplayAt(p));
         _settingsWindow.Reload();
@@ -180,7 +189,7 @@ public sealed class AppController : IDisposable
 
     // ───────────── 救出 ─────────────
 
-    /// <summary>救出処理を 1 つずつ実行する。実行中の新しい要求は最新のものだけを残す（第13章）。</summary>
+    /// <summary>救出処理を 1 つずつ実行する。実行中の新しい要求は最新のものだけを残す。</summary>
     private async void RunExclusive(Func<Task> work)
     {
         if (_busy)
@@ -188,34 +197,40 @@ public sealed class AppController : IDisposable
             _pending = work;
             return;
         }
+        _pending = null;
         _busy = true;
+        await _rescueGate.WaitAsync();
         try
         {
             var next = work;
             while (next != null)
             {
-                _pending = null;
                 try { await next(); }
-                catch (Exception ex) { Notify(null, StatusKind.Error, Loc.T("Error_Unexpected"), ex.Message); }
+                catch (Exception ex)
+                {
+                    Log.Error("Rescue operation", ex);
+                    Notify(null, StatusKind.Error, Loc.T("Error_Unexpected"), ex.Message);
+                }
                 next = _pending;
+                _pending = null;
             }
         }
         finally
         {
             _busy = false;
+            _rescueGate.Release();
         }
     }
 
-    private bool IsExcludedForManual(WindowInfo w) => false;
-
-    /// <summary>F-02：target へ全ウインドウを救出する。</summary>
+    /// <summary>target へ全ウインドウを救出する。</summary>
     public void RescueAllTo(DisplayInfo target, DisplayInfo notifyOn)
     {
         RunExclusive(async () =>
         {
             var displays = Displays.Connected;
             var options = Settings.ToPlacementOptions();
-            var report = await Task.Run(() => RescueEngine.RescueAll(target, displays, options, IsExcludedForManual, CancellationToken.None));
+            // 手動の一括救出は自動補正の除外設定に関係なく全対象を含める。
+            var report = await Task.Run(() => RescueEngine.RescueAll(target, displays, options, _ => false, CancellationToken.None));
             ShowReport(report, notifyOn, Loc.F("Result_RescuedTo", Displays.NumberOf(target)));
             _list?.Reload();
         });
@@ -225,7 +240,6 @@ public sealed class AppController : IDisposable
     public void RescueAllHere((int x, int y) p)
     {
         var ui = UiDisplayAt(p);
-        Displays.Refresh(MonitorService.GetDisplays(), p);
         var here = MonitorService.FromPoint(Displays.Connected, p.x, p.y) ?? ui;
         RescueAllTo(here, ui);
     }
@@ -297,7 +311,7 @@ public sealed class AppController : IDisposable
         RaiseStateChanged();
     }
 
-    /// <summary>画面番号を指定した一括救出。未接続の画面では実行しない（第9章）。</summary>
+    /// <summary>画面番号を指定した一括救出。未接続の画面では実行しない。</summary>
     public void RescueAllToNumber(int n, (int x, int y) p)
     {
         var ui = UiDisplayAt(p);
@@ -307,13 +321,12 @@ public sealed class AppController : IDisposable
 
     private DisplayInfo? ResolveNumberedTarget(int n, DisplayInfo ui)
     {
-        Displays.Refresh(MonitorService.GetDisplays(), Cursor());
         var target = Displays.ByNumber(n);
         if (target == null) Notify(ui, StatusKind.Warning, Loc.F("Error_DisplayNotConnected", n));
         return target;
     }
 
-    /// <summary>F-01：選択中（前面）の窓を画面 n へ移す。</summary>
+    /// <summary>選択中（前面）の窓を画面 n へ移す。</summary>
     public void RescueForegroundToNumber(int n, (int x, int y) p)
     {
         var ui = UiDisplayAt(p);
@@ -355,8 +368,8 @@ public sealed class AppController : IDisposable
 
     private void ShowReport(RescueReport report, DisplayInfo notifyOn, string title)
     {
-        string summary = Loc.F("Result_Summary", report.Moved, report.Skipped, report.Failed);
-        var kind = report.Failed > 0 ? StatusKind.Error : report.Partial > 0 ? StatusKind.Warning : StatusKind.Success;
+        string summary = Loc.F("Result_Summary", report.Moved, report.Skipped, report.Failed, report.Pending);
+        var kind = report.Failed > 0 ? StatusKind.Error : report.Partial > 0 || report.Pending > 0 ? StatusKind.Warning : StatusKind.Success;
         var notes = report.Results.Where(r => r.Reason != null && r.Outcome != RescueOutcome.Skipped || r.Partial)
             .Take(3).Select(r => $"{r.Label}: {Loc.T(r.Reason ?? "Reason_DoesNotFit")}");
         string text = string.Join("\n", new[] { summary }.Concat(notes));
@@ -371,13 +384,34 @@ public sealed class AppController : IDisposable
 
     public HotkeyService Hotkeys => _hotkeys;
 
-    public List<string> HotkeyActionIds => HotkeyActions.All(Displays.Connected.Count);
+    public List<string> HotkeyActionIds => HotkeyActions.All(Displays.Connected.Select(Displays.NumberOf));
 
-    public string GestureFor(string action) =>
-        Settings.Hotkeys.TryGetValue(action, out var g) ? g : HotkeyActions.Default(action);
+    public bool SetDisplayNumber(string id, int number)
+    {
+        if (!Displays.SetNumber(id, number)) return false;
+        ApplyHotkeys();
+        _tray.RebuildMenu();
+        RaiseStateChanged();
+        return true;
+    }
+
+    public void ForgetDisplay(string id)
+    {
+        if (!Displays.ForgetDisconnected(id)) return;
+        ApplyHotkeys();
+        _tray.RebuildMenu();
+        RaiseStateChanged();
+    }
+
+    public bool HasAltGr { get; private set; }
+
+    public string GestureFor(string action) => HotkeyActions.Resolve(action, Settings.Hotkeys, HasAltGr);
+
+    private void OnInputLanguageChanged(object sender, InputLanguageEventArgs e) => ApplyHotkeys();
 
     public void ApplyHotkeys()
     {
+        HasAltGr = KeyboardLayout.CurrentHasAltGr();
         _hotkeys.Apply(HotkeyActionIds, GestureFor);
         HotkeysChanged?.Invoke();
     }
@@ -406,14 +440,18 @@ public sealed class AppController : IDisposable
         else _watcher.Start();
     }
 
-    private async Task<PixelRect?> CheckNewWindowAsync(IntPtr hwnd, bool recheck)
+    private async Task<PixelRect?> CheckNewWindowAsync(IntPtr hwnd)
     {
-        if (Settings.Mode == MonitorMode.Off) return null;
-        var displays = Displays.Connected;
-        var w = WindowEnumerator.TryGet(hwnd, displays);
-        if (w == null) return null;
-        var result = await CorrectAsync(w, Settings.Mode == MonitorMode.FixedDestination);
-        return result;
+        // 手動要求を優先し、自動補正同士も含めて同時に窓を動かさない。
+        if (Settings.Mode == MonitorMode.Off || _busy || !_rescueGate.Wait(0)) return null;
+        try
+        {
+            var displays = Displays.Connected;
+            var w = WindowEnumerator.TryGet(hwnd, displays);
+            if (w == null) return null;
+            return await CorrectAsync(w, Settings.Mode == MonitorMode.FixedDestination);
+        }
+        finally { _rescueGate.Release(); }
     }
 
     /// <summary>1 窓を判定し、必要なら補正する。補正後の見えている矩形を返す。</summary>
@@ -447,14 +485,27 @@ public sealed class AppController : IDisposable
     private void OnDisplaysSettled()
     {
         _displayChangeTimer.Stop();
+        RefreshDisplays();
+        InspectExistingWindows();
+    }
+
+    private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+    {
+        // タスクバーなどによる作業領域の変更。壁紙変更も同じカテゴリなので、既存窓の救出は行わない。
+        if (e.Category == UserPreferenceCategory.Desktop)
+            _dispatcher.BeginInvoke(RefreshDisplays);
+    }
+
+    /// <summary>画面構成変更時と一覧の「更新」時にキャッシュを更新する。通常の表示・移動は Connected を使う。</summary>
+    public void RefreshDisplays()
+    {
         Displays.Refresh(MonitorService.GetDisplays(), Cursor());
         ApplyHotkeys();
         RaiseStateChanged();
-        InspectExistingWindows();
         _tray.RebuildMenu();
     }
 
-    /// <summary>使用画面・接続構成の変更後、監視中なら既存の窓を 1 回点検する（第9章）。</summary>
+    /// <summary>使用画面・接続構成の変更後、監視中なら既存の窓を 1 回点検する。</summary>
     public void InspectExistingWindows()
     {
         if (Settings.Mode == MonitorMode.Off) return;
@@ -469,6 +520,20 @@ public sealed class AppController : IDisposable
 
     public ContextMenuState ContextMenuState => ContextMenuRegistrar.GetState(ExePath);
 
+    private void RepairContextMenuOnStartup()
+    {
+        if (!Settings.ContextMenuWanted) return;
+        try
+        {
+            if (ContextMenuState == ContextMenuState.NeedsRepair) RegisterContextMenu();
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Check context menu on startup", ex);
+            LastContextMenuError = ex.Message;
+        }
+    }
+
     public bool RegisterContextMenu()
     {
         try
@@ -481,6 +546,7 @@ public sealed class AppController : IDisposable
         }
         catch (Exception ex)
         {
+            Log.Error("Register context menu", ex);
             LastContextMenuError = ex.Message;
             StateChanged?.Invoke();
             return false;
@@ -499,6 +565,7 @@ public sealed class AppController : IDisposable
         }
         catch (Exception ex)
         {
+            Log.Error("Unregister context menu", ex);
             LastContextMenuError = ex.Message;
             StateChanged?.Invoke();
             return false;
@@ -524,6 +591,7 @@ public sealed class AppController : IDisposable
             }
             catch (Exception ex)
             {
+                Log.Error("Update context menu labels", ex);
                 LastContextMenuError = ex.Message;
                 Notify(null, StatusKind.Warning, Loc.T("Error_ContextMenuLabels"), ex.Message);
             }
@@ -536,7 +604,11 @@ public sealed class AppController : IDisposable
     public void SetAutoStart(bool enabled)
     {
         try { AutoStart.Set(ExePath, enabled); }
-        catch (Exception ex) { Notify(null, StatusKind.Error, Loc.T("Error_AutoStart"), ex.Message); }
+        catch (Exception ex)
+        {
+            Log.Error("Set automatic startup", ex);
+            Notify(null, StatusKind.Error, Loc.T("Error_AutoStart"), ex.Message);
+        }
         StateChanged?.Invoke();
     }
 
@@ -564,7 +636,9 @@ public sealed class AppController : IDisposable
 
     public void Dispose()
     {
+        InputLanguageManager.Current.InputLanguageChanged -= OnInputLanguageChanged;
         SystemEvents.DisplaySettingsChanged -= OnDisplaySettingsChanged;
+        SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
         Loc.Instance.LanguageChanged -= OnLanguageChanged;
         _watcher.Dispose();
         _hotkeys.Dispose();

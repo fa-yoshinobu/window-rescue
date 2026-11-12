@@ -5,7 +5,7 @@ using Forms = System.Windows.Forms;
 
 namespace WindowRescue.UI;
 
-/// <summary>通知領域のアイコンとメニュー（第5.2節）。メニューを開いた時点のカーソル位置を「この画面」として保持する。</summary>
+/// <summary>通知領域のアイコンとメニュー。メニューを開いた時点のカーソル位置を「この画面」として保持する。</summary>
 public sealed class TrayIcon : IDisposable
 {
     private readonly AppController _app;

@@ -12,6 +12,43 @@ public partial class App : Application
     private SingleInstance? _instance;
     private AppController? _controller;
 
+    public App()
+    {
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+    }
+
+    private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        Log.Error("UI unhandled exception", e.Exception);
+        // 初期化途中やネイティブ障害・メモリ不足では、継続可能な状態を保証できない。
+        if (_controller == null || e.Exception is OutOfMemoryException or AccessViolationException or System.Runtime.InteropServices.SEHException) return;
+        try
+        {
+            _controller.Notify(null, UI.StatusKind.Error, Loc.T("Error_Unexpected"), Loc.T("Error_Logged"));
+            e.Handled = true;
+        }
+        catch (Exception notificationError) { Log.Error("Exception notification failed", notificationError); }
+    }
+
+    private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception exception) Log.Error("Process unhandled exception", exception);
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        Log.Error("Unobserved task exception", e.Exception);
+        e.SetObserved();
+        if (_controller == null || Dispatcher.HasShutdownStarted) return;
+        Dispatcher.BeginInvoke(() =>
+        {
+            try { _controller.Notify(null, UI.StatusKind.Error, Loc.T("Error_Unexpected"), Loc.T("Error_Logged")); }
+            catch (Exception ex) { Log.Error("Task exception notification failed", ex); }
+        });
+    }
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -24,8 +61,17 @@ public partial class App : Application
         if (!_instance.IsPrimary)
         {
             // 常駐中のプロセスへ操作を渡し、こちらは終了する（重複起動しない）
-            if (!background)
-                SingleInstance.Send(cmd.Action == AppCommand.None ? cmd with { Action = AppCommand.ShowMini } : cmd);
+            if (!background && !SingleInstance.Send(cmd.Action == AppCommand.None ? cmd with { Action = AppCommand.ShowMini } : cmd, out var failure))
+            {
+                Loc.Instance.SetLanguage(SettingsStore.Load().Language);
+                string message = failure switch
+                {
+                    SingleInstance.SendFailure.AccessDenied => Loc.T("Error_CommandSend_AccessDenied"),
+                    SingleInstance.SendFailure.Timeout => Loc.T("Error_CommandSend_Timeout"),
+                    _ => Loc.T("Error_CommandSend_ConnectionLost"),
+                };
+                MessageBox.Show(message, Loc.T("App_Name"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
             Shutdown();
             return;
         }
@@ -45,6 +91,9 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        DispatcherUnhandledException -= OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException -= OnUnhandledException;
+        TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
         SystemParameters.StaticPropertyChanged -= OnSystemParameterChanged;
         _controller?.Dispose();
         _instance?.Dispose();
@@ -56,7 +105,7 @@ public partial class App : Application
         if (e.PropertyName == nameof(SystemParameters.HighContrast)) ApplyHighContrast();
     }
 
-    /// <summary>ハイコントラスト時は OS の配色を尊重する（第17.2節）。</summary>
+    /// <summary>ハイコントラスト時は OS の配色を尊重する。</summary>
     private void ApplyHighContrast()
     {
         var keys = new[]

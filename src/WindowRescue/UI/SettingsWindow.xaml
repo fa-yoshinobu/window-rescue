@@ -11,6 +11,7 @@
                   Background="{DynamicResource Brush.Surface}">
         <StackPanel Margin="32,24,32,32" MaxWidth="900">
             <TextBlock Style="{StaticResource H1}" Text="{l:T Settings_Heading}" />
+            <ui:StatusBanner x:Name="ReadOnlyBanner" />
 
             <!-- よく使う救出操作（上部） -->
             <Border Style="{StaticResource Card}">
@@ -97,6 +98,15 @@
             <!-- ショートカット -->
             <Border Style="{StaticResource Card}">
                 <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Displays}" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_DisplaysHelp}" />
+                    <StackPanel x:Name="DisplayRows" Margin="0,8,0,0" />
+                    <ui:StatusBanner x:Name="DisplayNumbersBanner" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
                     <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Shortcuts}" />
                     <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_ShortcutsHelp}" />
                     <Grid x:Name="ShortcutGrid" Margin="0,8,0,0">
@@ -147,6 +157,15 @@
                     <TextBlock x:Name="PrivilegeText" Style="{StaticResource Help}" />
                     <Button x:Name="ElevateButton" Margin="0,8,0,0" Click="Elevate_Click"><TextBlock Text="{l:T Menu_RestartElevated}" /></Button>
                     <TextBlock Style="{StaticResource Help}" Margin="0,16,0,0" x:Name="SettingsPathText" />
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource H2}" Margin="0,0,0,8" Text="{l:T Settings_Logs}" />
+                    <TextBlock Style="{StaticResource Help}" Text="{l:T Settings_LogsHelp}" />
+                    <TextBlock x:Name="LogPathText" Style="{StaticResource Help}" />
+                    <Button Margin="0,8,0,0" Click="OpenLogs_Click"><TextBlock Text="{l:T Settings_OpenLogs}" /></Button>
                 </StackPanel>
             </Border>
 

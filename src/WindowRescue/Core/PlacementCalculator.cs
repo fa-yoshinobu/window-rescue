@@ -1,6 +1,6 @@
 namespace WindowRescue.Core;
 
-/// <summary>第8章の数値（DIP）。</summary>
+/// <summary>極小判定・標準救出サイズ・段違い配置の設定値（DIP）。</summary>
 public sealed record PlacementOptions
 {
     public int TinyWidthDip { get; init; } = 160;
@@ -87,7 +87,7 @@ public enum Verdict
     EnlargeInDisplay,
 }
 
-/// <summary>第7.3節の判定。</summary>
+/// <summary>新しい窓の位置・大きさ・状態から、必要な自動補正を判定する。</summary>
 public static class WindowJudge
 {
     public static (Verdict Verdict, DisplayInfo? Display) Judge(

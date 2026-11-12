@@ -11,7 +11,7 @@ using WindowRescue.Native;
 
 namespace WindowRescue.UI;
 
-/// <summary>本アプリの画面を、指定した画面（呼び出し時のカーソルのある画面）の中央に表示する（第5.1節）。</summary>
+/// <summary>本アプリの画面を、指定した画面（呼び出し時のカーソルのある画面）の中央に表示する。</summary>
 public static class WindowPositioner
 {
     public static void ShowOn(Window w, DisplayInfo d, bool activate = true)
@@ -125,7 +125,7 @@ public sealed class StatusBanner : Border
     public void Hide() => Visibility = Visibility.Collapsed;
 }
 
-/// <summary>結果通知。フォーカスを奪わず、指定した画面の右下に数秒表示する（第13章）。</summary>
+/// <summary>結果通知。フォーカスを奪わず、指定した画面の右下に数秒表示する。</summary>
 public sealed class ToastWindow : Window
 {
     private static ToastWindow? _current;

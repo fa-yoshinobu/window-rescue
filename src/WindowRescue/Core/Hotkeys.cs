@@ -64,7 +64,7 @@ public readonly record struct HotkeyGesture(ModifierKeys Modifiers, Key Key)
         NativeMethods.MOD_NOREPEAT;
 }
 
-/// <summary>ショートカットの操作 ID と初期割り当て（第10章）。</summary>
+/// <summary>ショートカットの操作 ID と初期割り当て。</summary>
 public static class HotkeyActions
 {
     public const string RescueForeground = "RescueForeground";
@@ -84,32 +84,37 @@ public static class HotkeyActions
         return int.TryParse(id[(i + 1)..], out number);
     }
 
-    /// <summary>画面数に応じた操作 ID の一覧（最低 3 画面分）。</summary>
-    public static List<string> All(int displayCount)
+    /// <summary>接続中の画面番号と、常に表示する 1〜3 の操作 ID。</summary>
+    public static List<string> All(IEnumerable<int> connectedNumbers)
     {
-        int n = Math.Max(3, displayCount);
+        var numbers = connectedNumbers.Concat([1, 2, 3]).Where(n => n > 0).Distinct().Order().ToList();
         var list = new List<string>();
-        for (int i = 1; i <= n; i++) list.Add(ForDisplay(RescueForeground, i));
-        for (int i = 1; i <= n; i++) list.Add(ForDisplay(RescueAll, i));
+        foreach (int number in numbers) list.Add(ForDisplay(RescueForeground, number));
+        foreach (int number in numbers) list.Add(ForDisplay(RescueAll, number));
         list.Add(OpenList);
         list.Add(RescueHere);
         return list;
     }
 
-    public static string Default(string id)
+    public static string Default(string id, bool hasAltGr = false)
     {
+        string gesture;
         if (TryParseDisplayAction(id, out var action, out int n))
         {
             if (n > 9) return "";
-            return action == RescueForeground ? $"Ctrl+Alt+{n}" : $"Ctrl+Alt+Shift+{n}";
+            gesture = action == RescueForeground ? $"Ctrl+Alt+{n}" : $"Ctrl+Alt+Shift+{n}";
         }
-        return id switch
+        else gesture = id switch
         {
             OpenList => "Ctrl+Alt+Space",
             RescueHere => "Ctrl+Alt+Home",
             _ => "",
         };
+        return KeyboardLayout.ConflictsWithAltGr(gesture, hasAltGr) ? "" : gesture;
     }
+
+    internal static string Resolve(string action, IReadOnlyDictionary<string, string> configured, bool hasAltGr) =>
+        configured.TryGetValue(action, out var gesture) ? gesture : Default(action, hasAltGr);
 }
 
 public enum HotkeyStatus { Unassigned, Registered, Failed, Invalid, Duplicate }

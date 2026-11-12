@@ -47,8 +47,8 @@ public partial class RescuePanelWindow : Window
             ThisDisplayText.Text = Loc.F("Panel_ThisDisplayIs", _app.Displays.NumberOf(OpenedOn));
         var r = _app.LastReport;
         if (r != null)
-            ResultBanner.Show(r.Failed > 0 ? StatusKind.Error : StatusKind.Success, Loc.T("Panel_LastResult"),
-                Loc.F("Result_Summary", r.Moved, r.Skipped, r.Failed));
+            ResultBanner.Show(r.Failed > 0 ? StatusKind.Error : r.Pending > 0 ? StatusKind.Warning : StatusKind.Success, Loc.T("Panel_LastResult"),
+                Loc.F("Result_Summary", r.Moved, r.Skipped, r.Failed, r.Pending));
         _updating = false;
     }
 

@@ -144,7 +144,11 @@ public partial class WindowListWindow : Window
 
     private void Rescue_Click(object sender, RoutedEventArgs e) => RescueSelected();
 
-    private void Refresh_Click(object sender, RoutedEventArgs e) => Reload();
+    private void Refresh_Click(object sender, RoutedEventArgs e)
+    {
+        _app.RefreshDisplays();
+        Reload();
+    }
 
     /// <summary>選択した窓を救出する。最後に選んだ窓を操作対象（前面）にする。</summary>
     private void RescueSelected()

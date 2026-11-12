@@ -4,6 +4,23 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Error_CommandSend_AccessDenied" xml:space="preserve"><value>The running Window Rescue denied access. Exit it and restart it from the same Windows account, then try again.</value></data>
+  <data name="Error_CommandSend_Timeout" xml:space="preserve"><value>The running Window Rescue did not respond within 2.5 seconds. It may still be starting or may be unresponsive. Try again, or restart it.</value></data>
+  <data name="Error_CommandSend_ConnectionLost" xml:space="preserve"><value>The connection to the running Window Rescue was interrupted. The action could not be sent. Try again.</value></data>
+  <data name="Shortcut_AltGrWarning" xml:space="preserve"><value>This shortcut can block AltGr character input on the current keyboard layout.</value></data>
+  <data name="Settings_Displays" xml:space="preserve"><value>Display numbers</value></data>
+  <data name="Settings_DisplaysHelp" xml:space="preserve"><value>Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.</value></data>
+  <data name="Settings_DisplayEntry" xml:space="preserve"><value>Display {0}: {1} — {2}</value></data>
+  <data name="Settings_DisplayNumber" xml:space="preserve"><value>Number for display {0}: {1}</value></data>
+  <data name="Settings_ChangeNumber" xml:space="preserve"><value>Change Number</value></data>
+  <data name="Display_Connected" xml:space="preserve"><value>Connected</value></data>
+  <data name="Display_Disconnected" xml:space="preserve"><value>Disconnected</value></data>
+  <data name="Error_DisplayNumber" xml:space="preserve"><value>Enter a positive whole number (up to 2147483647).</value></data>
+  <data name="Error_Logged" xml:space="preserve"><value>Error details were recorded in the local log. You can open its folder from Settings.</value></data>
+  <data name="Settings_Logs" xml:space="preserve"><value>Error logs</value></data>
+  <data name="Settings_LogsHelp" xml:space="preserve"><value>Logs stay on this PC (up to two 1 MB files). Window titles are not recorded.</value></data>
+  <data name="Settings_OpenLogs" xml:space="preserve"><value>Open Log Folder</value></data>
+  <data name="Error_OpenLogs" xml:space="preserve"><value>Could not open the log folder.</value></data>
   <data name="App_Name" xml:space="preserve"><value>Window Rescue</value></data>
   <data name="Menu_Title" xml:space="preserve"><value>Window Rescue</value></data>
   <data name="Menu_RescueHere" xml:space="preserve"><value>Rescue All Windows to This Display</value></data>
@@ -87,9 +104,10 @@
   <data name="Status_Error" xml:space="preserve"><value>Error</value></data>
   <data name="Status_Info" xml:space="preserve"><value>Information</value></data>
   <data name="Result_RescuedTo" xml:space="preserve"><value>Rescued windows to display {0}</value></data>
-  <data name="Result_Summary" xml:space="preserve"><value>Moved: {0} · Skipped: {1} · Failed: {2}</value></data>
+  <data name="Result_Summary" xml:space="preserve"><value>Moved: {0} · Skipped: {1} · Failed: {2} · Pending: {3}</value></data>
   <data name="Reason_Excluded" xml:space="preserve"><value>Excluded in settings</value></data>
   <data name="Reason_NotResponding" xml:space="preserve"><value>The app is not responding</value></data>
+  <data name="Reason_MovePending" xml:space="preserve"><value>Move requested; it may take effect when the app responds. Check the window before retrying.</value></data>
   <data name="Reason_Unexpected" xml:space="preserve"><value>An unexpected error occurred</value></data>
   <data name="Reason_Closed" xml:space="preserve"><value>The window has been closed</value></data>
   <data name="Reason_MoveRefused" xml:space="preserve"><value>The app refused to move or resize</value></data>
@@ -163,4 +181,6 @@
   <data name="Settings_RunningStandard" xml:space="preserve"><value>Running with standard permissions. Windows of apps running as administrator may not be movable.</value></data>
   <data name="Settings_RunningElevated" xml:space="preserve"><value>Running as administrator.</value></data>
   <data name="Settings_StoredAt" xml:space="preserve"><value>Settings are stored only on this PC: {0}</value></data>
+  <data name="Settings_FutureVersionTitle" xml:space="preserve"><value>Settings were saved by a newer version</value></data>
+  <data name="Settings_FutureVersionHelp" xml:space="preserve"><value>Using defaults for this session. Changes will not be saved, to preserve the existing file. Use the newer app to load your settings.</value></data>
 </root>

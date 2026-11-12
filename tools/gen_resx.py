@@ -2,6 +2,23 @@ import sys
 from xml.sax.saxutils import escape
 
 S = [
+ ("Error_CommandSend_AccessDenied", "The running Window Rescue denied access. Exit it and restart it from the same Windows account, then try again.", "常駐中の Window Rescue への接続が拒否されました。一度終了し、同じ Windows アカウントで起動し直してから再実行してください。"),
+ ("Error_CommandSend_Timeout", "The running Window Rescue did not respond within 2.5 seconds. It may still be starting or may be unresponsive. Try again, or restart it.", "常駐中の Window Rescue が2.5秒以内に応答しませんでした。起動中、または応答が停止している可能性があります。再実行するか、アプリを起動し直してください。"),
+ ("Error_CommandSend_ConnectionLost", "The connection to the running Window Rescue was interrupted. The action could not be sent. Try again.", "常駐中の Window Rescue との接続が切れ、操作を送信できませんでした。もう一度実行してください。"),
+ ("Shortcut_AltGrWarning", "This shortcut can block AltGr character input on the current keyboard layout.", "この配列ではAltGrによる文字入力を妨げる可能性があります。"),
+ ("Settings_Displays", "Display numbers", "画面番号"),
+ ("Settings_DisplaysHelp", "Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.", "使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。"),
+ ("Settings_DisplayEntry", "Display {0}: {1} — {2}", "画面 {0}：{1} — {2}"),
+ ("Settings_DisplayNumber", "Number for display {0}: {1}", "画面 {0}（{1}）の番号"),
+ ("Settings_ChangeNumber", "Change Number", "番号を変更"),
+ ("Display_Connected", "Connected", "接続中"),
+ ("Display_Disconnected", "Disconnected", "未接続"),
+ ("Error_DisplayNumber", "Enter a positive whole number (up to 2147483647).", "1〜2147483647の整数を入力してください。"),
+ ("Error_Logged", "Error details were recorded in the local log. You can open its folder from Settings.", "エラーの詳細をローカルのログに記録しました。設定から保存フォルダーを開けます。"),
+ ("Settings_Logs", "Error logs", "エラーログ"),
+ ("Settings_LogsHelp", "Logs stay on this PC (up to two 1 MB files). Window titles are not recorded.", "ログはこの PC 内だけに保存します（最大 1 MB × 2 世代）。窓のタイトルは記録しません。"),
+ ("Settings_OpenLogs", "Open Log Folder", "ログの保存フォルダーを開く"),
+ ("Error_OpenLogs", "Could not open the log folder.", "ログの保存フォルダーを開けませんでした。"),
  # key, en, ja
  ("App_Name", "Window Rescue", "Window Rescue"),
  ("Menu_Title", "Window Rescue", "ウインドウ救出"),
@@ -93,10 +110,11 @@ S = [
  ("Status_Info", "Information", "お知らせ"),
 
  ("Result_RescuedTo", "Rescued windows to display {0}", "画面 {0} へ救出しました"),
- ("Result_Summary", "Moved: {0} · Skipped: {1} · Failed: {2}", "移動：{0} 件　対象外：{1} 件　失敗：{2} 件"),
+ ("Result_Summary", "Moved: {0} · Skipped: {1} · Failed: {2} · Pending: {3}", "移動：{0} 件　対象外：{1} 件　失敗：{2} 件　確認待ち：{3} 件"),
 
  ("Reason_Excluded", "Excluded in settings", "設定で除外しています"),
  ("Reason_NotResponding", "The app is not responding", "アプリが応答していません"),
+ ("Reason_MovePending", "Move requested; it may take effect when the app responds. Check the window before retrying.", "移動要求は送信済みです。アプリの応答後に反映される場合があります。再実行する前に窓を確認してください。"),
  ("Reason_Unexpected", "An unexpected error occurred", "予期しないエラーが発生しました"),
  ("Reason_Closed", "The window has been closed", "窓が閉じられています"),
  ("Reason_MoveRefused", "The app refused to move or resize", "アプリが移動・サイズ変更を受け付けませんでした"),
@@ -176,6 +194,8 @@ S = [
  ("Settings_RunningStandard", "Running with standard permissions. Windows of apps running as administrator may not be movable.", "標準の権限で動作しています。管理者権限で動くアプリの窓は移動できない場合があります。"),
  ("Settings_RunningElevated", "Running as administrator.", "管理者権限で動作しています。"),
  ("Settings_StoredAt", "Settings are stored only on this PC: {0}", "設定はこの PC 内だけに保存します：{0}"),
+ ("Settings_FutureVersionTitle", "Settings were saved by a newer version", "新しいバージョンで保存された設定です"),
+ ("Settings_FutureVersionHelp", "Using defaults for this session. Changes will not be saved, to preserve the existing file. Use the newer app to load your settings.", "元の設定ファイルを保護するため、今回は既定値で動作し、変更を保存しません。設定を読み込むには新しい版のアプリを使用してください。"),
 ]
 
 HEADER = '''<?xml version="1.0" encoding="utf-8"?>

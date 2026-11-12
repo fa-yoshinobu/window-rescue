@@ -44,6 +44,9 @@ public partial class SettingsWindow : Window
         try
         {
             var s = _app.Settings;
+            if (s.IsReadOnly)
+                ReadOnlyBanner.Show(StatusKind.Warning, Loc.T("Settings_FutureVersionTitle"), Loc.T("Settings_FutureVersionHelp"));
+            else ReadOnlyBanner.Hide();
 
             ModeOff.IsChecked = s.Mode == MonitorMode.Off;
             ModeAuto.IsChecked = s.Mode == MonitorMode.AutoRescue;
@@ -63,6 +66,7 @@ public partial class SettingsWindow : Window
             ExclusionScope.DisplayMemberPath = nameof(Choice.Label);
             ExclusionScope.SelectedIndex = 0;
             BuildExclusions();
+            BuildDisplays();
             BuildShortcuts();
             UpdateContextMenuState();
 
@@ -80,6 +84,7 @@ public partial class SettingsWindow : Window
             PrivilegeText.Text = Loc.T(AppController.IsElevated ? "Settings_RunningElevated" : "Settings_RunningStandard");
             ElevateButton.Visibility = AppController.IsElevated ? Visibility.Collapsed : Visibility.Visible;
             SettingsPathText.Text = Loc.F("Settings_StoredAt", SettingsStore.FilePath);
+            LogPathText.Text = Log.FilePath;
             VersionText.Text = Loc.T("About_Version") + AboutWindow.AppVersion;
         }
         finally
@@ -110,8 +115,8 @@ public partial class SettingsWindow : Window
     {
         if (_updating) return;
         var s = _app.Settings;
-        bool ok = TryRange(TinyW.Text, 20, 2000, out int tw) & TryRange(TinyH.Text, 20, 2000, out int th)
-                & TryRange(StdW.Text, 200, 8000, out int sw) & TryRange(StdH.Text, 150, 8000, out int sh);
+        bool ok = SettingRanges.TinyWidth.TryParse(TinyW.Text, out int tw) & SettingRanges.TinyHeight.TryParse(TinyH.Text, out int th)
+                & SettingRanges.StandardWidth.TryParse(StdW.Text, out int sw) & SettingRanges.StandardHeight.TryParse(StdH.Text, out int sh);
         if (!ok)
         {
             NumbersBanner.Show(StatusKind.Error, Loc.T("Error_InvalidNumber"), Loc.T("Error_InvalidNumberHint"));
@@ -122,9 +127,6 @@ public partial class SettingsWindow : Window
         s.TinyWidthDip = tw; s.TinyHeightDip = th; s.StandardWidthDip = sw; s.StandardHeightDip = sh;
         _app.Save();
     }
-
-    private static bool TryRange(string text, int min, int max, out int value) =>
-        int.TryParse(text.Trim(), out value) && value >= min && value <= max;
 
     private void BuildExclusions()
     {
@@ -164,6 +166,43 @@ public partial class SettingsWindow : Window
         else _app.Settings.Exclusions.Add(new AppExclusion { ProcessName = name, Scope = scope });
         ExclusionProcess.Text = "";
         _app.RaiseStateChanged();
+    }
+
+    private void BuildDisplays()
+    {
+        DisplayRows.Children.Clear();
+        foreach (var display in _app.Settings.Displays.OrderBy(d => d.Number))
+        {
+            bool connected = _app.Displays.ById(display.Id) != null;
+            string label = Loc.F("Settings_DisplayEntry", display.Number, display.Name,
+                Loc.T(connected ? "Display_Connected" : "Display_Disconnected"));
+            var row = new StackPanel { Margin = new Thickness(0, 4, 0, 12) };
+            row.Children.Add(new TextBlock { Text = label, TextWrapping = TextWrapping.Wrap });
+            var controls = new WrapPanel();
+            var number = new TextBox { Text = display.Number.ToString(), Width = 80, Margin = new Thickness(0, 4, 12, 4) };
+            AutomationProperties.SetName(number, Loc.F("Settings_DisplayNumber", display.Number, display.Name));
+            controls.Children.Add(number);
+            var change = new Button { Content = Loc.T("Settings_ChangeNumber"), Margin = new Thickness(0, 4, 12, 4) };
+            AutomationProperties.SetName(change, Loc.T("Settings_ChangeNumber") + " — " + label);
+            change.Click += (_, _) =>
+            {
+                if (!int.TryParse(number.Text, out int value) || value < 1)
+                {
+                    DisplayNumbersBanner.Show(StatusKind.Error, Loc.T("Error_DisplayNumber"));
+                    number.Focus();
+                    return;
+                }
+                DisplayNumbersBanner.Hide();
+                _app.SetDisplayNumber(display.Id, value);
+            };
+            controls.Children.Add(change);
+            var remove = new Button { Content = Loc.T("Common_Remove"), IsEnabled = !connected, Margin = new Thickness(0, 4, 0, 4) };
+            AutomationProperties.SetName(remove, Loc.T("Common_Remove") + " — " + label);
+            remove.Click += (_, _) => _app.ForgetDisplay(display.Id);
+            controls.Children.Add(remove);
+            row.Children.Add(controls);
+            DisplayRows.Children.Add(row);
+        }
     }
 
     // ───────────── ショートカット ─────────────
@@ -221,6 +260,12 @@ public partial class SettingsWindow : Window
                     break;
             }
             stack.Children.Add(statusText);
+            if (KeyboardLayout.ConflictsWithAltGr(gesture, _app.HasAltGr))
+            {
+                var warning = new TextBlock { Text = Loc.T("Shortcut_AltGrWarning"), TextWrapping = TextWrapping.Wrap, Style = (Style)FindResource("Help") };
+                warning.SetResourceReference(TextBlock.ForegroundProperty, "Brush.Warning");
+                stack.Children.Add(warning);
+            }
             Grid.SetRow(stack, row);
             Grid.SetColumn(stack, 1);
             ShortcutGrid.Children.Add(stack);
@@ -339,6 +384,20 @@ public partial class SettingsWindow : Window
     }
 
     private void Elevate_Click(object sender, RoutedEventArgs e) => _app.RestartElevated();
+
+    private void OpenLogs_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Directory.CreateDirectory(SettingsStore.Directory);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(SettingsStore.Directory) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Open log folder", ex);
+            _app.Notify(Here, StatusKind.Error, Loc.T("Error_OpenLogs"));
+        }
+    }
 
     // ───────────── 上部の操作 ─────────────
 

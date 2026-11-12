@@ -33,7 +33,7 @@ public partial class MiniWindow : Window
     }
 
     /// <summary>このウインドウがある画面。</summary>
-    public DisplayInfo? Here => WindowPositioner.DisplayOf(this, MonitorService.GetDisplays());
+    public DisplayInfo? Here => WindowPositioner.DisplayOf(this, _app.Displays.Connected);
 
     /// <summary>
     /// anchor があればその点（カーソル）の左上に、なければ保存した位置（なければ fallback の画面の右下）に表示する。
@@ -42,7 +42,7 @@ public partial class MiniWindow : Window
     {
         if (anchor != null) saved = anchor;
         var hwnd = new WindowInteropHelper(this).EnsureHandle();
-        var displays = MonitorService.GetDisplays();
+        var displays = _app.Displays.Connected;
         bool useSaved = saved is { } s && displays.Any(d => d.WorkArea.Contains(s.x + 20, s.y + 20));
         var work = fallback.WorkArea;
         int x = useSaved ? saved!.Value.x : work.Right - (int)(300 * fallback.Scale);
@@ -58,8 +58,8 @@ public partial class MiniWindow : Window
             if (anchor is { } a)
                 cur = cur with { X = a.x - cur.Width, Y = a.y - cur.Height };
             var host = anchor is { } p
-                ? MonitorService.NearestToPoint(MonitorService.GetDisplays(), p.x, p.y) ?? fallback
-                : MonitorService.NearestToRect(MonitorService.GetDisplays(), cur) ?? fallback;
+                ? MonitorService.NearestToPoint(_app.Displays.Connected, p.x, p.y) ?? fallback
+                : MonitorService.NearestToRect(_app.Displays.Connected, cur) ?? fallback;
             var fit = PlacementCalculator.Clamp(cur, host.WorkArea);
             if (fit != PixelRect.From(r))
                 NativeMethods.SetWindowPos(hwnd, IntPtr.Zero, fit.X, fit.Y, 0, 0,
@@ -73,7 +73,6 @@ public partial class MiniWindow : Window
     {
         var here = Here;
         if (here == null) return;
-        _app.Displays.Refresh(MonitorService.GetDisplays(), AppController.Cursor());
         DisplayText.Text = Loc.F("Mini_ThisDisplay", _app.Displays.NumberOf(here));
         // 表示の更新ではチェック変更の処理を動かさない
         _updating = true;
