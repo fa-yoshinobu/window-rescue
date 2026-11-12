@@ -2,6 +2,9 @@ import sys
 from xml.sax.saxutils import escape
 
 S = [
+ ("Error_CommandSend_AccessDenied", "The running Window Rescue denied access. Exit it and restart it from the same Windows account, then try again.", "常駐中の Window Rescue への接続が拒否されました。一度終了し、同じ Windows アカウントで起動し直してから再実行してください。"),
+ ("Error_CommandSend_Timeout", "The running Window Rescue did not respond within 2.5 seconds. It may still be starting or may be unresponsive. Try again, or restart it.", "常駐中の Window Rescue が2.5秒以内に応答しませんでした。起動中、または応答が停止している可能性があります。再実行するか、アプリを起動し直してください。"),
+ ("Error_CommandSend_ConnectionLost", "The connection to the running Window Rescue was interrupted. The action could not be sent. Try again.", "常駐中の Window Rescue との接続が切れ、操作を送信できませんでした。もう一度実行してください。"),
  ("Shortcut_AltGrWarning", "This shortcut can block AltGr character input on the current keyboard layout.", "この配列ではAltGrによる文字入力を妨げる可能性があります。"),
  ("Settings_Displays", "Display numbers", "画面番号"),
  ("Settings_DisplaysHelp", "Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.", "使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。"),

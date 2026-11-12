@@ -4,6 +4,9 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Error_CommandSend_AccessDenied" xml:space="preserve"><value>常駐中の Window Rescue への接続が拒否されました。一度終了し、同じ Windows アカウントで起動し直してから再実行してください。</value></data>
+  <data name="Error_CommandSend_Timeout" xml:space="preserve"><value>常駐中の Window Rescue が2.5秒以内に応答しませんでした。起動中、または応答が停止している可能性があります。再実行するか、アプリを起動し直してください。</value></data>
+  <data name="Error_CommandSend_ConnectionLost" xml:space="preserve"><value>常駐中の Window Rescue との接続が切れ、操作を送信できませんでした。もう一度実行してください。</value></data>
   <data name="Shortcut_AltGrWarning" xml:space="preserve"><value>この配列ではAltGrによる文字入力を妨げる可能性があります。</value></data>
   <data name="Settings_Displays" xml:space="preserve"><value>画面番号</value></data>
   <data name="Settings_DisplaysHelp" xml:space="preserve"><value>使用中の番号を指定すると、その画面と番号を入れ替えます。未接続の画面だけ削除できます。ショートカットは画面番号に割り当てられたままです。</value></data>

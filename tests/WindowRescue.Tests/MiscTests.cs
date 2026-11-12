@@ -267,4 +267,30 @@ public class SingleInstanceTests
         Assert.True(delivered.Wait(TimeSpan.FromSeconds(5)));
         Assert.Equal(sent, received);
     }
+
+    [Fact]
+    public void AnonymousAndUnknownCommandsAreRejectedWithoutStoppingServer()
+    {
+        using var primary = new SingleInstance(TimeSpan.Zero);
+        Assert.True(primary.IsPrimary, "WindowRescue.exe を終了してから実行してください。");
+        using var delivered = new ManualResetEventSlim();
+        AppCommand? received = null;
+        primary.StartServer(c => { received = c; delivered.Set(); });
+        foreach (var (level, command) in new[]
+        {
+            (System.Security.Principal.TokenImpersonationLevel.Anonymous, "list|0|0"),
+            (System.Security.Principal.TokenImpersonationLevel.Identification, "format-c|0|0"),
+        })
+        {
+            using var client = new System.IO.Pipes.NamedPipeClientStream(".", SingleInstance.PipeName,
+                System.IO.Pipes.PipeDirection.Out, System.IO.Pipes.PipeOptions.Asynchronous, level);
+            client.Connect(2000);
+            client.Write(System.Text.Encoding.UTF8.GetBytes(command));
+            Assert.False(delivered.Wait(TimeSpan.FromMilliseconds(350)));
+        }
+        var sent = new AppCommand(AppCommand.OpenList, -100, 200);
+        Assert.True(SingleInstance.Send(sent));
+        Assert.True(delivered.Wait(TimeSpan.FromSeconds(3)));
+        Assert.Equal(sent, received);
+    }
 }

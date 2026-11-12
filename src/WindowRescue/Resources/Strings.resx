@@ -4,6 +4,9 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Error_CommandSend_AccessDenied" xml:space="preserve"><value>The running Window Rescue denied access. Exit it and restart it from the same Windows account, then try again.</value></data>
+  <data name="Error_CommandSend_Timeout" xml:space="preserve"><value>The running Window Rescue did not respond within 2.5 seconds. It may still be starting or may be unresponsive. Try again, or restart it.</value></data>
+  <data name="Error_CommandSend_ConnectionLost" xml:space="preserve"><value>The connection to the running Window Rescue was interrupted. The action could not be sent. Try again.</value></data>
   <data name="Shortcut_AltGrWarning" xml:space="preserve"><value>This shortcut can block AltGr character input on the current keyboard layout.</value></data>
   <data name="Settings_Displays" xml:space="preserve"><value>Display numbers</value></data>
   <data name="Settings_DisplaysHelp" xml:space="preserve"><value>Change a number to swap it with another display. Only disconnected displays can be removed. Shortcuts stay assigned to their numbers.</value></data>

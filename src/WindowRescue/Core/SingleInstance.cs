@@ -1,6 +1,6 @@
 using System.IO;
 using System.IO.Pipes;
-
+using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 
@@ -44,51 +44,83 @@ public sealed record AppCommand(string Action, int CursorX, int CursorY)
 /// <summary>同じ利用者の常駐プロセスを 1 つに保ち、名前付きパイプで操作を渡す。</summary>
 public sealed class SingleInstance : IDisposable
 {
-    private static readonly string UserSid = WindowsIdentity.GetCurrent().User?.Value ?? Environment.UserName;
+    private static readonly SecurityIdentifier UserSid = WindowsIdentity.GetCurrent().User
+        ?? throw new InvalidOperationException("The current user SID is unavailable.");
     private static readonly string MutexName = $@"Local\WindowRescue_{UserSid}";
-    private static readonly string PipeName = $"WindowRescue_{UserSid}";
+    internal static readonly string PipeName = $"WindowRescue_{UserSid}";
 
-    private readonly Mutex _mutex;
+    private readonly Mutex? _mutex;
     private readonly CancellationTokenSource _cts = new();
     public bool IsPrimary { get; }
 
     public SingleInstance(TimeSpan wait)
+        : this(wait, () => MutexAcl.Create(false, MutexName, out _, CreateMutexSecurity())) { }
+
+    internal SingleInstance(TimeSpan wait, Func<Mutex> openMutex)
     {
-        _mutex = new Mutex(false, MutexName);
         try
         {
+            _mutex = openMutex();
             IsPrimary = _mutex.WaitOne(wait);
         }
         catch (AbandonedMutexException)
         {
             IsPrimary = true;
         }
+        catch (UnauthorizedAccessException ex)
+        {
+            // 既存の旧版などで開けない場合も、二重に常駐せずパイプへの送信を試す。
+            Log.Error("Single-instance mutex access denied", ex);
+        }
     }
 
-    /// <summary>既存プロセスへ操作を送る。起動直後でまだ受け付けていない場合は少し待って再試行する。</summary>
-    public static bool Send(AppCommand command)
+    internal static MutexSecurity CreateMutexSecurity()
     {
-        for (int attempt = 0; attempt < 10; attempt++)
+        var security = new MutexSecurity();
+        security.SetAccessRuleProtection(true, false);
+        security.AddAccessRule(new MutexAccessRule(UserSid, MutexRights.FullControl, AccessControlType.Allow));
+        security.SetOwner(UserSid);
+        return security;
+    }
+
+    internal static PipeSecurity CreatePipeSecurity()
+    {
+        var security = new PipeSecurity();
+        security.SetAccessRuleProtection(true, false);
+        security.AddAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.NetworkSid, null),
+            PipeAccessRights.FullControl, AccessControlType.Deny));
+        security.AddAccessRule(new PipeAccessRule(UserSid, PipeAccessRights.FullControl, AccessControlType.Allow));
+        security.SetOwner(UserSid);
+        return security;
+    }
+
+    public enum SendFailure { None, AccessDenied, Timeout, ConnectionLost }
+
+    public static bool Send(AppCommand command) => Send(command, out _);
+
+    /// <summary>接続と書込みを合わせて最大 2.5 秒待つ。UI 起動前にも呼べる。</summary>
+    public static bool Send(AppCommand command, out SendFailure failure)
+    {
+        failure = SendAsync(command, PipeName).GetAwaiter().GetResult();
+        return failure == SendFailure.None;
+    }
+
+    internal static async Task<SendFailure> SendAsync(AppCommand command, string pipeName)
+    {
+        using var deadline = new CancellationTokenSource(TimeSpan.FromMilliseconds(2500));
+        try
         {
-            try
-            {
-                using var client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out, PipeOptions.CurrentUserOnly);
-                client.Connect(500);
-                var bytes = Encoding.UTF8.GetBytes(command.Serialize());
-                client.Write(bytes, 0, bytes.Length);
-                client.Flush();
-                return true;
-            }
-            catch (Exception) when (attempt < 9)
-            {
-                Thread.Sleep(300);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            // 識別だけを許可し、接続先へクライアントの権限を貸さない。
+            using var client = new NamedPipeClientStream(".", pipeName, PipeDirection.Out,
+                PipeOptions.Asynchronous, TokenImpersonationLevel.Identification);
+            await client.ConnectAsync(deadline.Token).ConfigureAwait(false);
+            await client.WriteAsync(Encoding.UTF8.GetBytes(command.Serialize()), deadline.Token).ConfigureAwait(false);
+            await client.FlushAsync(deadline.Token).ConfigureAwait(false);
+            return SendFailure.None;
         }
-        return false;
+        catch (UnauthorizedAccessException ex) { Log.Error("Command send access denied", ex); return SendFailure.AccessDenied; }
+        catch (OperationCanceledException ex) { Log.Error("Command send timed out", ex); return SendFailure.Timeout; }
+        catch (IOException ex) { Log.Error("Command send failed", ex); return SendFailure.ConnectionLost; }
     }
 
     /// <summary>受信ループを開始する。onCommand はスレッドプールから呼ばれる。</summary>
@@ -101,21 +133,34 @@ public sealed class SingleInstance : IDisposable
             {
                 try
                 {
-                    // CurrentUserOnly：同じ利用者のプロセスだけが接続できる
-                    using var server = new NamedPipeServerStream(PipeName, PipeDirection.In, 1,
-                        PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
+                    using var server = NamedPipeServerStreamAcl.Create(PipeName, PipeDirection.In, 1,
+                        PipeTransmissionMode.Message, PipeOptions.Asynchronous, 256, 0, CreatePipeSecurity());
                     await server.WaitForConnectionAsync(token);
+                    using var requestDeadline = CancellationTokenSource.CreateLinkedTokenSource(token);
+                    requestDeadline.CancelAfter(TimeSpan.FromMilliseconds(2500));
                     var buffer = new byte[256];
-                    int n = await server.ReadAsync(buffer, token);
+                    int n = await server.ReadAsync(buffer, requestDeadline.Token);
+                    if (n == 0 || !server.IsMessageComplete) continue;
+                    bool sameUser = false;
+                    server.RunAsClient(() =>
+                    {
+                        using var clientIdentity = WindowsIdentity.GetCurrent(ifImpersonating: true);
+                        sameUser = clientIdentity?.User is { } clientSid && UserSid.Equals(clientSid);
+                    });
+                    if (!sameUser) continue;
+                    // 同じ SID でも受け付けるのは Known の固定操作だけ。コマンド・パスを実行せず、
+                    // トークンや任意のファイル操作も公開しないため、送信元へ管理者権限を渡さない。
                     var cmd = AppCommand.Deserialize(Encoding.UTF8.GetString(buffer, 0, n).Trim());
                     if (cmd != null) onCommand(cmd);
                 }
-                catch (OperationCanceledException)
+                catch (OperationCanceledException) when (token.IsCancellationRequested)
                 {
                     break;
                 }
-                catch (Exception)
+                catch (OperationCanceledException) { /* 応答しない接続だけを閉じ、次の要求を受け付ける。 */ }
+                catch (Exception ex)
                 {
+                    Log.Error("Command receive failed", ex);
                     await Task.Delay(200, CancellationToken.None);
                 }
             }
@@ -127,8 +172,8 @@ public sealed class SingleInstance : IDisposable
         _cts.Cancel();
         if (IsPrimary)
         {
-            try { _mutex.ReleaseMutex(); } catch (Exception) { }
+            try { _mutex?.ReleaseMutex(); } catch (Exception) { }
         }
-        _mutex.Dispose();
+        _mutex?.Dispose();
     }
 }

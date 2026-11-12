@@ -61,8 +61,17 @@ public partial class App : Application
         if (!_instance.IsPrimary)
         {
             // 常駐中のプロセスへ操作を渡し、こちらは終了する（重複起動しない）
-            if (!background)
-                SingleInstance.Send(cmd.Action == AppCommand.None ? cmd with { Action = AppCommand.ShowMini } : cmd);
+            if (!background && !SingleInstance.Send(cmd.Action == AppCommand.None ? cmd with { Action = AppCommand.ShowMini } : cmd, out var failure))
+            {
+                Loc.Instance.SetLanguage(SettingsStore.Load().Language);
+                string message = failure switch
+                {
+                    SingleInstance.SendFailure.AccessDenied => Loc.T("Error_CommandSend_AccessDenied"),
+                    SingleInstance.SendFailure.Timeout => Loc.T("Error_CommandSend_Timeout"),
+                    _ => Loc.T("Error_CommandSend_ConnectionLost"),
+                };
+                MessageBox.Show(message, Loc.T("App_Name"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
             Shutdown();
             return;
         }
