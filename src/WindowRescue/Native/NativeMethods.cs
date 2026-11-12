@@ -86,6 +86,7 @@ internal static class NativeMethods
     public const uint SWP_NOZORDER = 0x0004;
     public const uint SWP_NOACTIVATE = 0x0010;
     public const uint SWP_NOOWNERZORDER = 0x0200;
+    public const uint SWP_ASYNCWINDOWPOS = 0x4000;
 
     public const int SW_SHOWNORMAL = 1;
     public const int SW_SHOWMINIMIZED = 2;
@@ -95,6 +96,7 @@ internal static class NativeMethods
     public const int SW_RESTORE = 9;
 
     public const int WPF_RESTORETOMAXIMIZED = 0x0002;
+    public const int WPF_ASYNCWINDOWPLACEMENT = 0x0004;
 
     public const uint GW_OWNER = 4;
     public const uint GA_ROOT = 2;
@@ -173,6 +175,13 @@ internal static class NativeMethods
 
     [DllImport("user32.dll")]
     public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+    [DllImport("user32.dll", EntryPoint = "SendMessageTimeoutW", SetLastError = true)]
+    public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint message, IntPtr wParam, IntPtr lParam,
+        uint flags, uint timeout, out IntPtr result);
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);

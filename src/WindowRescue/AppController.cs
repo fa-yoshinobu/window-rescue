@@ -29,6 +29,7 @@ public sealed class AppController : IDisposable
 
     private bool _busy;
     private Func<Task>? _pending;
+    private readonly SemaphoreSlim _rescueGate = new(1, 1);
 
     public AppSettings Settings { get; }
     public DisplayManager Displays { get; }
@@ -192,13 +193,14 @@ public sealed class AppController : IDisposable
             _pending = work;
             return;
         }
+        _pending = null;
         _busy = true;
+        await _rescueGate.WaitAsync();
         try
         {
             var next = work;
             while (next != null)
             {
-                _pending = null;
                 try { await next(); }
                 catch (Exception ex)
                 {
@@ -206,11 +208,13 @@ public sealed class AppController : IDisposable
                     Notify(null, StatusKind.Error, Loc.T("Error_Unexpected"), ex.Message);
                 }
                 next = _pending;
+                _pending = null;
             }
         }
         finally
         {
             _busy = false;
+            _rescueGate.Release();
         }
     }
 
@@ -363,8 +367,8 @@ public sealed class AppController : IDisposable
 
     private void ShowReport(RescueReport report, DisplayInfo notifyOn, string title)
     {
-        string summary = Loc.F("Result_Summary", report.Moved, report.Skipped, report.Failed);
-        var kind = report.Failed > 0 ? StatusKind.Error : report.Partial > 0 ? StatusKind.Warning : StatusKind.Success;
+        string summary = Loc.F("Result_Summary", report.Moved, report.Skipped, report.Failed, report.Pending);
+        var kind = report.Failed > 0 ? StatusKind.Error : report.Partial > 0 || report.Pending > 0 ? StatusKind.Warning : StatusKind.Success;
         var notes = report.Results.Where(r => r.Reason != null && r.Outcome != RescueOutcome.Skipped || r.Partial)
             .Take(3).Select(r => $"{r.Label}: {Loc.T(r.Reason ?? "Reason_DoesNotFit")}");
         string text = string.Join("\n", new[] { summary }.Concat(notes));
@@ -437,12 +441,16 @@ public sealed class AppController : IDisposable
 
     private async Task<PixelRect?> CheckNewWindowAsync(IntPtr hwnd, bool recheck)
     {
-        if (Settings.Mode == MonitorMode.Off) return null;
-        var displays = Displays.Connected;
-        var w = WindowEnumerator.TryGet(hwnd, displays);
-        if (w == null) return null;
-        var result = await CorrectAsync(w, Settings.Mode == MonitorMode.FixedDestination);
-        return result;
+        // 手動要求を優先し、自動補正同士も含めて同時に窓を動かさない。
+        if (Settings.Mode == MonitorMode.Off || _busy || !_rescueGate.Wait(0)) return null;
+        try
+        {
+            var displays = Displays.Connected;
+            var w = WindowEnumerator.TryGet(hwnd, displays);
+            if (w == null) return null;
+            return await CorrectAsync(w, Settings.Mode == MonitorMode.FixedDestination);
+        }
+        finally { _rescueGate.Release(); }
     }
 
     /// <summary>1 窓を判定し、必要なら補正する。補正後の見えている矩形を返す。</summary>

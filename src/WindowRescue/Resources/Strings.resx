@@ -101,9 +101,10 @@
   <data name="Status_Error" xml:space="preserve"><value>Error</value></data>
   <data name="Status_Info" xml:space="preserve"><value>Information</value></data>
   <data name="Result_RescuedTo" xml:space="preserve"><value>Rescued windows to display {0}</value></data>
-  <data name="Result_Summary" xml:space="preserve"><value>Moved: {0} · Skipped: {1} · Failed: {2}</value></data>
+  <data name="Result_Summary" xml:space="preserve"><value>Moved: {0} · Skipped: {1} · Failed: {2} · Pending: {3}</value></data>
   <data name="Reason_Excluded" xml:space="preserve"><value>Excluded in settings</value></data>
   <data name="Reason_NotResponding" xml:space="preserve"><value>The app is not responding</value></data>
+  <data name="Reason_MovePending" xml:space="preserve"><value>Move requested; it may take effect when the app responds. Check the window before retrying.</value></data>
   <data name="Reason_Unexpected" xml:space="preserve"><value>An unexpected error occurred</value></data>
   <data name="Reason_Closed" xml:space="preserve"><value>The window has been closed</value></data>
   <data name="Reason_MoveRefused" xml:space="preserve"><value>The app refused to move or resize</value></data>

@@ -107,10 +107,11 @@ S = [
  ("Status_Info", "Information", "お知らせ"),
 
  ("Result_RescuedTo", "Rescued windows to display {0}", "画面 {0} へ救出しました"),
- ("Result_Summary", "Moved: {0} · Skipped: {1} · Failed: {2}", "移動：{0} 件　対象外：{1} 件　失敗：{2} 件"),
+ ("Result_Summary", "Moved: {0} · Skipped: {1} · Failed: {2} · Pending: {3}", "移動：{0} 件　対象外：{1} 件　失敗：{2} 件　確認待ち：{3} 件"),
 
  ("Reason_Excluded", "Excluded in settings", "設定で除外しています"),
  ("Reason_NotResponding", "The app is not responding", "アプリが応答していません"),
+ ("Reason_MovePending", "Move requested; it may take effect when the app responds. Check the window before retrying.", "移動要求は送信済みです。アプリの応答後に反映される場合があります。再実行する前に窓を確認してください。"),
  ("Reason_Unexpected", "An unexpected error occurred", "予期しないエラーが発生しました"),
  ("Reason_Closed", "The window has been closed", "窓が閉じられています"),
  ("Reason_MoveRefused", "The app refused to move or resize", "アプリが移動・サイズ変更を受け付けませんでした"),

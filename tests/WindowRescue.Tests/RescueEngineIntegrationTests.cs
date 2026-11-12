@@ -13,8 +13,34 @@ public class RescueEngineIntegrationTests
     /// <summary>別の STA スレッドでメッセージループを回すテスト用の窓。</summary>
     private sealed class TestWindow : IDisposable
     {
+        private sealed class PausableForm : Forms.Form
+        {
+            [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+            private static extern uint WaitForSingleObject(IntPtr handle, uint milliseconds);
+            public readonly ManualResetEventSlim Blocked = new();
+            public readonly ManualResetEventSlim Resume = new();
+            public bool PauseOnMove;
+
+            public void Pause()
+            {
+                Blocked.Set();
+                // STA の managed Wait はメッセージを処理するため、ネイティブ待機で本当に応答を止める。
+                WaitForSingleObject(Resume.WaitHandle.SafeWaitHandle.DangerousGetHandle(), 10000);
+            }
+
+            protected override void WndProc(ref Forms.Message m)
+            {
+                if (m.Msg == 0x0046 && PauseOnMove) // WM_WINDOWPOSCHANGING
+                {
+                    PauseOnMove = false;
+                    Pause();
+                }
+                base.WndProc(ref m);
+            }
+        }
+
         private readonly Thread _thread;
-        private Forms.Form? _form;
+        private PausableForm? _form;
         private readonly ManualResetEventSlim _ready = new();
         public IntPtr Handle { get; private set; }
 
@@ -22,7 +48,7 @@ public class RescueEngineIntegrationTests
         {
             _thread = new Thread(() =>
             {
-                _form = new Forms.Form
+                _form = new PausableForm
                 {
                     Text = "WindowRescue test window",
                     StartPosition = Forms.FormStartPosition.Manual,
@@ -46,8 +72,23 @@ public class RescueEngineIntegrationTests
 
         public void Minimize() => NativeMethods.ShowWindow(Handle, NativeMethods.SW_SHOWMINNOACTIVE);
 
+        public void Pause()
+        {
+            _form!.BeginInvoke(_form.Pause);
+            Assert.True(_form.Blocked.Wait(TimeSpan.FromSeconds(2)));
+        }
+
+        public void PauseOnMove() => _form!.Invoke(() => _form.PauseOnMove = true);
+
+        public void Resume()
+        {
+            _form!.Resume.Set();
+            _form.Invoke(() => { });
+        }
+
         public void Dispose()
         {
+            _form?.Resume.Set();
             _form?.BeginInvoke(() => _form.Close());
             _thread.Join(TimeSpan.FromSeconds(5));
         }
@@ -172,5 +213,66 @@ public class RescueEngineIntegrationTests
         var placed = PlacementCalculator.CenterOver(300, 200, owner, Primary.WorkArea);
         Assert.Equal(owner.CenterX, placed.CenterX);
         Assert.Equal(owner.CenterY, placed.CenterY);
+    }
+
+    [Fact]
+    public void UnresponsiveWindowIsRejectedWithoutMovingAfterRecovery()
+    {
+        using var tw = new TestWindow();
+        tw.SetRect(OffscreenRect(640, 480));
+        var before = Info(tw); // IsHung がまだ false のスナップショットでも応答を確かめる。
+        tw.Pause();
+        var elapsed = System.Diagnostics.Stopwatch.StartNew();
+        var result = RescueEngine.RescueOne(before, Primary, Displays, new PlacementOptions(), false, false);
+        Assert.Equal(RescueOutcome.Failed, result.Outcome);
+        Assert.Equal("Reason_NotResponding", result.Reason);
+        Assert.True(elapsed.Elapsed < TimeSpan.FromSeconds(1));
+        tw.Resume();
+        Thread.Sleep(250);
+        Assert.Equal(before.WindowRect, Info(tw).WindowRect);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void WindowHangingDuringMoveReturnsPendingWithoutLeavingWorker(bool minimized)
+    {
+        using var tw = new TestWindow();
+        tw.SetRect(OffscreenRect(640, 480));
+        if (minimized) tw.Minimize();
+        var before = Info(tw);
+        tw.PauseOnMove();
+        var elapsed = System.Diagnostics.Stopwatch.StartNew();
+        var result = RescueEngine.RescueOne(before, Primary, Displays, new PlacementOptions(), minimized, false);
+        Assert.Equal(RescueOutcome.Pending, result.Outcome);
+        Assert.True(elapsed.Elapsed < TimeSpan.FromSeconds(3), elapsed.Elapsed.ToString());
+        var retry = RescueEngine.RescueOne(before, Primary, Displays, new PlacementOptions(), minimized, false);
+        Assert.Equal(RescueOutcome.Pending, retry.Outcome);
+        tw.Resume();
+        Assert.True(SpinWait.SpinUntil(() => Primary.WorkArea.Contains(Info(tw).VisibleRect), 1000));
+        Assert.Equal(RescueOutcome.Unchanged,
+            RescueEngine.RescueOne(Info(tw), Primary, Displays, new PlacementOptions(), false, false).Outcome);
+    }
+
+    [Fact]
+    public void ThirtyWindowBatchFinishesWithinThreeSeconds()
+    {
+        var windows = new List<TestWindow>();
+        try
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                var window = new TestWindow();
+                windows.Add(window);
+                window.SetRect(OffscreenRect(400, 300));
+            }
+            var snapshots = windows.Select(Info).ToList();
+            var elapsed = System.Diagnostics.Stopwatch.StartNew();
+            var report = RescueEngine.RescueAll(Primary, Displays, new PlacementOptions(), _ => false, CancellationToken.None, snapshots);
+            Assert.Equal(30, report.Moved);
+            Assert.True(elapsed.Elapsed < TimeSpan.FromSeconds(3), elapsed.Elapsed.ToString());
+            Assert.All(windows, w => Assert.True(Primary.WorkArea.Contains(Info(w).VisibleRect)));
+        }
+        finally { foreach (var window in windows) window.Dispose(); }
     }
 }
