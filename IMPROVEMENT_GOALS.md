@@ -24,7 +24,7 @@ dotnet test WindowRescue.slnx
 | G1 | 異常終了の原因が残り、利用者に伝わる | 高 | 完了（2026-11-12） |
 | G2 | 管理者として動作中でも、右クリックメニューと二重起動が届く | 高 | 未着手 |
 | G3 | 接続中のすべての画面をショートカットで指定できる | 高 | 完了（2026-11-12） |
-| G4 | push/PRでビルドとテストが走る | 高 | 未着手 |
+| G4 | push/PRでビルドとテストが走る | 高 | PR実行検証済み／main反映待ち |
 | G5 | ストアアプリの新しい窓も自動補正の対象になる | 中 | 未着手 |
 | G6 | 初期ショートカットが文字入力を妨げない | 中 | 未着手 |
 | G7 | 同梱ランタイムの更新が滞らない | 中 | 未着手 |
@@ -118,17 +118,20 @@ dotnet test WindowRescue.slnx
 
 **完了条件**
 - [ ] `ci.yml` が `push`（main）と `pull_request` で起動し、`windows-latest` で `dotnet build -c Release` と単体テストを実行する。
-- [ ] テストの除外条件（`IntegrationTests`、`SingleInstanceTests`）が `release.yml` と同じで、定義が1か所にまとまっている（例：xUnitのTraitで分類し、両方から同じフィルターを使う）。
-- [ ] `ci.yml` は `permissions: contents: read` のみ。
-- [ ] `release.yml` を含むすべてのActionがコミットハッシュ固定で、`persist-credentials: false` と `timeout-minutes` がある。
-- [ ] `release.yml` の「Check version」で、タグ名をスクリプトへ直接埋め込まず環境変数で渡す。
-- [ ] 警告をエラーにする設定（`TreatWarningsAsErrors`）をCIのビルドで有効にし、警告を解消している。
+- [x] テストの除外条件（`IntegrationTests`、`SingleInstanceTests`）が `release.yml` と同じで、定義が1か所にまとまっている（例：xUnitのTraitで分類し、両方から同じフィルターを使う）。
+- [x] `ci.yml` は `permissions: contents: read` のみ。
+- [x] `release.yml` を含むすべてのActionがコミットハッシュ固定で、`persist-credentials: false` と `timeout-minutes` がある。
+- [x] `release.yml` の「Check version」で、タグ名をスクリプトへ直接埋め込まず環境変数で渡す。
+- [x] 警告をエラーにする設定（`TreatWarningsAsErrors`）をCIのビルドで有効にし、警告を解消している。
 
 **検証**: わざと失敗するテストを入れたブランチで、CIが失敗する。
+
+**検証記録（2026-11-12）**: Releaseの警告エラー化ビルドとCI用フィルターを確認。全ワークフローのYAML、ActionのSHA固定、checkoutの資格情報非永続化、実行ジョブのタイムアウトも確認済み。[Draft PR #1](https://github.com/fa-yoshinobu/window-rescue/pull/1)で[76テストの成功](https://github.com/fa-yoshinobu/window-rescue/actions/runs/43228438964)と、一時的に追加した1件の失敗テストによる[ジョブの失敗・終了コード1](https://github.com/fa-yoshinobu/window-rescue/actions/runs/43228785350)を確認した。失敗用テストは最終状態から除去済み。利用者の指示によりmainへの反映・マージは行わず、mainへのpushを契機にした実行は未確認。
 
 **対象外**: 結合テストのCI実行、コード署名。
 
 ---
+
 
 ## G5: ストアアプリの新しい窓も自動補正の対象になる
 

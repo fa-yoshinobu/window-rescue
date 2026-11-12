@@ -251,19 +251,20 @@ public class LocalizationTests
     }
 }
 
+[Trait("Category", "DesktopIntegration")]
 public class SingleInstanceTests
 {
     [Fact]
     public void CommandIsDeliveredToPrimaryInstance()
     {
-        // 実際の常駐プロセスと衝突しないよう、本体が起動中なら確認を省く
         using var primary = new SingleInstance(TimeSpan.Zero);
-        if (!primary.IsPrimary) return;
-        var received = new TaskCompletionSource<AppCommand>();
-        primary.StartServer(c => received.TrySetResult(c));
+        Assert.True(primary.IsPrimary, "WindowRescue.exe を終了してから実行してください。");
+        using var delivered = new ManualResetEventSlim();
+        AppCommand? received = null;
+        primary.StartServer(c => { received = c; delivered.Set(); });
         var sent = new AppCommand(AppCommand.OpenList, -100, 200);
         Assert.True(SingleInstance.Send(sent));
-        Assert.True(received.Task.Wait(TimeSpan.FromSeconds(5)));
-        Assert.Equal(sent, received.Task.Result);
+        Assert.True(delivered.Wait(TimeSpan.FromSeconds(5)));
+        Assert.Equal(sent, received);
     }
 }

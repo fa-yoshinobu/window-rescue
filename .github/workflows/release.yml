@@ -14,10 +14,13 @@ jobs:
     outputs:
       release_tag: ${{ steps.publish_release.outputs.release_tag }}
     runs-on: windows-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-dotnet@v6
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
         with:
           dotnet-version: "10.0.x"
 
@@ -25,15 +28,20 @@ jobs:
       - name: Check version
         id: ver
         shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          $v = "${{ github.ref_name }}".TrimStart("v")
+          $v = $env:RELEASE_TAG.TrimStart("v")
           $props = ([xml](Get-Content Directory.Build.props -Raw)).Project.PropertyGroup.Version
           if ($props -ne $v) { throw "タグ $v と Directory.Build.props の Version $props が一致しません" }
           "version=$v" >> $env:GITHUB_OUTPUT
 
       # 実際の画面・窓を操作する結合テストと、名前付きパイプのテストは CI では実行しない
+      - name: Build with warnings as errors
+        run: dotnet build WindowRescue.slnx -c Release -p:TreatWarningsAsErrors=true
+
       - name: Test
-        run: dotnet test WindowRescue.slnx -c Release --filter "FullyQualifiedName!~IntegrationTests&FullyQualifiedName!~SingleInstanceTests"
+        run: dotnet test WindowRescue.slnx -c Release --no-build --settings tests/ci.runsettings
 
       - name: Publish single-file exe
         run: >

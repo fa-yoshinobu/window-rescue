@@ -15,6 +15,13 @@ src\WindowRescue\bin\Debug\net10.0-windows\WindowRescue.exe
 
 テストには、テスト自身が作った窓だけを画面外に置いて救出を確かめる結合テストが含まれます（利用者の窓には触れません）。常駐中の Window Rescue がテスト用の窓を自動補正してしまうため、結合テストはアプリを終了してから実行します（起動中はその旨を表示して失敗します）。
 
+mainへのpushとPull RequestではWindows上のCIがReleaseビルドと単体テストを実行します。警告はビルドエラーとして扱います。リリースも同じ `tests/ci.runsettings` を使用し、`Category=DesktopIntegration` のテスト（実窓・プロセス間通信）だけ除外します。ローカルでCIと同じ確認をする場合：
+
+```powershell
+dotnet build WindowRescue.slnx -c Release -p:TreatWarningsAsErrors=true
+dotnet test WindowRescue.slnx -c Release --no-build --settings tests/ci.runsettings
+```
+
 ## 1 ファイル exe の作成
 
 `build.bat` を実行すると `dist\WindowRescue.exe`（.NET ランタイム同梱）を作ります。アプリが起動中だと上書きできないため、トレイの「終了」で閉じてから実行します。

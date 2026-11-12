@@ -7,6 +7,7 @@ namespace WindowRescue.Tests;
 /// <summary>
 /// 実際の Win32 窓で救出・取り消しを確認する。テスト自身が作った窓だけを操作し、利用者の窓には触れない。
 /// </summary>
+[Trait("Category", "DesktopIntegration")]
 public class RescueEngineIntegrationTests
 {
     /// <summary>別の STA スレッドでメッセージループを回すテスト用の窓。</summary>
