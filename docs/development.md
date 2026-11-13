@@ -24,12 +24,12 @@ dotnet test WindowRescue.slnx -c Release --no-build --settings tests/ci.runsetti
 
 ## 1 ファイル exe の作成
 
-`build.bat` を実行すると `dist\WindowRescue.exe`（.NET ランタイム同梱）と `dist\WindowRescue-win-x64.zip` を作ります。UTF-8のバッチで、起動時にコードページ65001へ切り替えます。アプリが起動中だと上書きできないため、トレイの「終了」で閉じてから実行します。
+`build.bat` を実行すると `artifacts\release\WindowRescue.exe`（.NET ランタイム同梱）と `artifacts\release\WindowRescue-win-x64.zip` を作ります。UTF-8のバッチで、起動時にコードページ65001へ切り替えます。アプリが起動中だと上書きできないため、トレイの「終了」で閉じてから実行します。
 
 コマンドで行う場合：
 
 ```powershell
-dotnet publish src/WindowRescue/WindowRescue.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -o dist
+dotnet publish src/WindowRescue/WindowRescue.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -o artifacts/release
 ```
 
 ## バージョン

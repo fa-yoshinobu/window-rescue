@@ -48,7 +48,7 @@ jobs:
           dotnet publish src/WindowRescue/WindowRescue.csproj -c Release -r win-x64 --self-contained true
           -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
           -p:EnableCompressionInSingleFile=true -p:DebugType=None
-          -o dist
+          -o artifacts/release
 
       - name: Set up release tools
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
@@ -60,7 +60,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          python .github/scripts/release_assets.py prepare --repository "$env:GITHUB_REPOSITORY" --release-tag "$env:RELEASE_TAG" --asset-name WindowRescue-win-x64.zip --file dist/WindowRescue.exe
+          python .github/scripts/release_assets.py prepare --repository "$env:GITHUB_REPOSITORY" --release-tag "$env:RELEASE_TAG" --asset-name WindowRescue-win-x64.zip --file artifacts/release/WindowRescue.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Publish ZIP and checksum

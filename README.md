@@ -61,3 +61,11 @@
 Window Rescue brings off-screen or tiny windows back to a usable display on Windows 11 (x64). Japanese and English interfaces are included, along with the .NET runtime.
 
 Use the [ZIP and checksum links above](#download), extract the ZIP, and run `WindowRescue.exe`. Settings stay on this PC; the app makes no external network connections.
+
+## 配布とローカル出力
+
+配布EXEは `artifacts/release/WindowRescue.exe`。同じフォルダーへ `WindowRescue-win-x64.zip` と `WindowRescue-win-x64.zip.sha256` を生成します。Windows 11 x64。.NETランタイム同梱。
+
+次回リリースの配布先: [Windows x64 ZIP](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip) / [SHA-256](https://github.com/fa-yoshinobu/window-rescue/releases/latest/download/WindowRescue-win-x64.zip.sha256)。既存公開物は変更していません。
+
+[変更履歴](CHANGELOG.md) / [未完了項目](TODO.md)。リリース前に `.github/release-notes.md` の英語ChangesをCHANGELOGの該当版に合わせます。公開後は公開ZIP内の全EXEをVirusTotalで解析し、解析完了・SHA-256照合後に本文のSecurity scanだけを更新します。再検査は `Scan release with VirusTotal` の `release_tag` を指定します。

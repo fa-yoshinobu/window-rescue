@@ -3,6 +3,10 @@
 この形式は [Keep a Changelog](https://keepachangelog.com/ja/1.1.0/) に基づきます。
 
 ## [Unreleased]
+### Changed
+
+- ローカルとCIの配布EXE・固定名ZIP・SHA-256を `artifacts/release/` に統一。必要な配布ファイルだけをZIPへ含める。
+
 
 ## [0.3.0] - 2026-11-12
 
