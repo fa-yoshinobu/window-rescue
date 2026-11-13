@@ -5,3 +5,5 @@ dist/
 .vs/
 TestResults/
 __pycache__/
+artifacts/
+*.pyc

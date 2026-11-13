@@ -14,6 +14,7 @@ Requirements: Windows 11 (x64). The .NET runtime is included.
 - Build/test CI and scheduled checks for bundled runtime updates.
 
 ### Changed
+- Publish the executable, fixed-name ZIP and SHA-256 checksum under `artifacts/release/` in local builds and CI.
 - Updated the bundled .NET and Windows Desktop runtime to 10.0.15.
 - Improved display refresh caching, build packaging and maintenance documentation.
 
